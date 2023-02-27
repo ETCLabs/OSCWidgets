@@ -36,9 +36,7 @@ LogWidget::LogWidget(size_t maxLineCount, QWidget *parent)
 	pal.setColor(QPalette::Base, BG_COLOR);
 	setPalette(pal);
 
-	QFont fnt("Monospace");
-	fnt.setStyleHint(QFont::TypeWriter);
-	setFont(fnt);
+    setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
 	m_VScrollBar = new QScrollBar(Qt::Vertical, this);
 	connect(m_VScrollBar, SIGNAL(valueChanged(int)), this, SLOT(onVScrollChanged(int)));
