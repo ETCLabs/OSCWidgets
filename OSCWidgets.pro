@@ -127,8 +127,14 @@ win32 {
     SOURCES += \
         ../EosSyncLib/EosSyncLib/EosTcp_Win.cpp \
         ../EosSyncLib/EosSyncLib/EosUdp_Win.cpp
-    LIBS += -luser32 -lWs2_32
+    LIBS += -luser32 -lWs2_32 -lwinmm
     QT += winextras
+
+    RC_ICONS = OSCWidgets/icon1.ico
+
+    CONFIG(release, debug|release) {
+        QMAKE_POST_LINK += $$clean_path("$$[QT_INSTALL_BINS]/windeployqt") --no-translations --no-opengl-sw --no-compiler-runtime $$clean_path("$${DESTDIR}/$${TARGET}.exe")
+    }
 }
 
 INCLUDEPATH = \
