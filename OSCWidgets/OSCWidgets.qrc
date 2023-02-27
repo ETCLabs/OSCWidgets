@@ -1,4 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/qt/etc">    
+	<file>qt.conf</file>
+</qresource>
 <qresource>
 	<file>assets/fonts/Roboto-Black.ttf</file>
 	<file>assets/fonts/Roboto-BlackItalic.ttf</file>

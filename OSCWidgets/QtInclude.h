@@ -46,52 +46,15 @@
 #define BUTTON_BRIGHTESS	0.2f
 #define BUTTON_RAISE		6
 
-#include <QtCore/QtGlobal>
-#include <QtCore/QDateTime>
-#include <QtCore/QMutex>
-#include <QtCore/QTimer>
-#include <QtCore/QThread>
-#include <QtCore/QSettings>
-#include <QtCore/QFile>
-#include <QtCore/QDir>
-#include <QtCore/QTextStream>
-#include <QtCore/QUrl>
-#include <QtCore/QElapsedTimer>
+#ifdef WIN32
+#include <Winsock2.h>
+#include <QtWinExtras/QtWin>
+#endif
 
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QWidget>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QStyleFactory>
-#include <QtWidgets/QScrollBar>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QSpinBox>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QSplitter>
-#include <QtWidgets/QScrollArea>
-#include <QtWidgets/QProgressBar>
-#include <QtWidgets/QTextEdit>
-#include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QColorDialog>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QDesktopWidget>
-#include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QSystemTrayIcon>
-#include <QtWidgets/QMenuBar>
-
-#include <QtGui/QDesktopServices>
-#include <QtGui/QCloseEvent>
-#include <QtGui/QPainter>
-#include <QtGui/QImageReader>
-#include <QtGui/QFontDatabase>
-#include <QtGui/QMatrix4x4>
-
-#include <QtNetwork/QNetworkInterface>
+#include <QtCore/QtCore>
+#include <QtGui/QtGui>
+#include <QtWidgets/QtWidgets>
+#include <QtNetwork/QtNetwork>
 
 ////////////////////////////////////////////////////////////////////////////////
 

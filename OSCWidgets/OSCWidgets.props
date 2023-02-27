@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <QTOSCWIDGETS>C:\Qt\5.15.11\msvc2019_64</QTOSCWIDGETS>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CustomBuildBeforeTargets>BuildGenerateSources</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <CustomBuild>
+      <Command>"$(QTOSCWIDGETS)\bin\moc.exe" "%(FullPath)" -o "$(IntermediateOutputPath)%(Filename).moc.cpp"</Command>
+      <Message>moc'ing %(FullPath)</Message>
+      <Outputs>$(IntermediateOutputPath)%(Filename).moc.cpp</Outputs>
+      <AdditionalInputs>$(QTOSCWIDGETS)\bin\moc.exe</AdditionalInputs>
+      <OutputItemType>ClCompile</OutputItemType>
+      <BuildInParallel>true</BuildInParallel>
+    </CustomBuild>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="QTOSCWIDGETS">
+      <Value>$(QTOSCWIDGETS)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

@@ -1,51 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
+    <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
+    <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{75F5AFD4-6B44-4D92-A669-86535C03BC4C}</ProjectGuid>
     <RootNamespace>OSCWidgets</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="OSCWidgets.props" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="OSCWidgets.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\build\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\build\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\EosSyncLib\EosSyncLib;C:\qt\Qt5.6.1\5.6\msvc2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\EosSyncLib\EosSyncLib;$(QTOSCWIDGETS)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4127;4996;4512</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
@@ -53,18 +59,21 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\qt\Qt5.6.1\5.6\msvc2015\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTOSCWIDGETS)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Widgetsd.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5WinExtrasd.lib;ws2_32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>$(QTOSCWIDGETS)\bin\windeployqt.exe --no-translations --no-opengl-sw --no-compiler-runtime "$(TargetPath)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\EosSyncLib\EosSyncLib;C:\qt\Qt5.6.1\5.6\msvc2015\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\EosSyncLib\EosSyncLib;$(QTOSCWIDGETS)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4127;4996;4512</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
@@ -73,10 +82,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\qt\Qt5.6.1\5.6\msvc2015\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(QTOSCWIDGETS)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>qtmain.lib;Qt5Core.lib;Qt5Widgets.lib;Qt5Gui.lib;Qt5Network.lib;Qt5WinExtras.lib;ws2_32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>$(QTOSCWIDGETS)\bin\windeployqt.exe --no-translations --no-opengl-sw --no-compiler-runtime "$(TargetPath)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\EosSyncLib\EosSyncLib\EosLog.cpp" />
@@ -93,11 +105,6 @@
     <ClCompile Include="FadeButton.cpp" />
     <ClCompile Include="LogFile.cpp" />
     <ClCompile Include="LogWidget.cpp" />
-    <ClCompile Include="moc\moc_FadeButton.cpp" />
-    <ClCompile Include="moc\moc_LogWidget.cpp" />
-    <ClCompile Include="moc\moc_ToyActivity.cpp" />
-    <ClCompile Include="moc\moc_ToyFlicker.cpp" />
-    <ClCompile Include="moc\moc_ToyWindow.cpp" />
     <ClCompile Include="ToyActivity.cpp" />
     <ClCompile Include="ToyFlicker.cpp" />
     <ClCompile Include="ToyLabel.cpp" />
@@ -106,23 +113,7 @@
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
-    <ClCompile Include="moc\moc_EditPanel.cpp" />
-    <ClCompile Include="moc\moc_MainWindow.cpp" />
-    <ClCompile Include="moc\moc_SettingsPanel.cpp" />
-    <ClCompile Include="moc\moc_Toy.cpp" />
-    <ClCompile Include="moc\moc_ToyButton.cpp" />
-    <ClCompile Include="moc\moc_ToyCmd.cpp" />
-    <ClCompile Include="moc\moc_ToyEncoder.cpp" />
-    <ClCompile Include="moc\moc_ToyGrid.cpp" />
-    <ClCompile Include="moc\moc_ToyMetro.cpp" />
-    <ClCompile Include="moc\moc_ToyPedal.cpp" />
-    <ClCompile Include="moc\moc_Toys.cpp" />
-    <ClCompile Include="moc\moc_ToySine.cpp" />
-    <ClCompile Include="moc\moc_ToySlider.cpp" />
-    <ClCompile Include="moc\moc_ToyWidget.cpp" />
-    <ClCompile Include="moc\moc_ToyXY.cpp" />
     <ClCompile Include="NetworkThreads.cpp" />
-    <ClCompile Include="OSCWidgets.qrc.cpp" />
     <ClCompile Include="SettingsPanel.cpp" />
     <ClCompile Include="Toy.cpp" />
     <ClCompile Include="ToyButton.cpp" />
@@ -139,213 +130,33 @@
   <ItemGroup>
     <ClInclude Include="..\..\EosSyncLib\EosSyncLib\EosUdp.h" />
     <ClInclude Include="..\..\EosSyncLib\EosSyncLib\EosUdp_Win.h" />
-    <CustomBuild Include="ToySine.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToySine.h -o moc\moc_ToySine.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToySine.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToySine.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToySine.h -o moc\moc_ToySine.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToySine.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToySine.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="ToyMetro.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyMetro.h -o moc\moc_ToyMetro.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyMetro.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyMetro.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyMetro.h -o moc\moc_ToyMetro.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyMetro.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyMetro.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="ToyXY.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyXY.h -o moc\moc_ToyXY.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyXY.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyXY.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyXY.h -o moc\moc_ToyXY.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyXY.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyXY.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="ToySlider.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToySlider.h -o moc\moc_ToySlider.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToySlider.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToySlider.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToySlider.h -o moc\moc_ToySlider.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToySlider.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToySlider.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="ToyPedal.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyPedal.h -o moc\moc_ToyPedal.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyPedal.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyPedal.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyPedal.h -o moc\moc_ToyPedal.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyPedal.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyPedal.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="ToyWidget.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyWidget.h -o moc\moc_ToyWidget.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyWidget.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyWidget.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyWidget.h -o moc\moc_ToyWidget.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyWidget.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyWidget.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="EditPanel.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe EditPanel.h -o moc\moc_EditPanel.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc EditPanel.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_EditPanel.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe EditPanel.h -o moc\moc_EditPanel.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc EditPanel.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_EditPanel.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="ToyFlicker.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyFlicker.h -o moc\moc_ToyFlicker.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyFlicker.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyFlicker.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyFlicker.h -o moc\moc_ToyFlicker.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyFlicker.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyFlicker.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="FadeButton.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe FadeButton.h -o moc\moc_FadeButton.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc FadeButton.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_FadeButton.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe FadeButton.h -o moc\moc_FadeButton.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc FadeButton.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_FadeButton.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="ToyActivity.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyActivity.h -o moc\moc_ToyActivity.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyActivity.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyActivity.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyActivity.h -o moc\moc_ToyActivity.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyActivity.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyActivity.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
+    <CustomBuild Include="ToySine.h" />
+    <CustomBuild Include="ToyMetro.h" />
+    <CustomBuild Include="ToyXY.h" />
+    <CustomBuild Include="ToySlider.h" />
+    <CustomBuild Include="ToyPedal.h" />
+    <CustomBuild Include="ToyWidget.h" />
+    <CustomBuild Include="EditPanel.h" />
+    <CustomBuild Include="ToyFlicker.h" />
+    <CustomBuild Include="FadeButton.h" />
+    <CustomBuild Include="ToyActivity.h" />
     <ClInclude Include="EosPlatform.h" />
     <ClInclude Include="LogFile.h" />
-    <CustomBuild Include="LogWidget.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe LogWidget.h -o moc\moc_LogWidget.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc LogWidget.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_LogWidget.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe LogWidget.h -o moc\moc_LogWidget.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc LogWidget.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_LogWidget.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
+    <CustomBuild Include="LogWidget.h" />
     <ClInclude Include="ToyLabel.h" />
-    <CustomBuild Include="ToyWindow.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyWindow.h -o moc\moc_ToyWindow.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyWindow.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyWindow.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyWindow.h -o moc\moc_ToyWindow.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyWindow.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyWindow.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
+    <CustomBuild Include="ToyWindow.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="NetworkThreads.h" />
     <ClInclude Include="resource.h" />
-    <CustomBuild Include="ToyButton.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyButton.h -o moc\moc_ToyButton.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyButton.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyButton.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyButton.h -o moc\moc_ToyButton.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyButton.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyButton.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="ToyGrid.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyGrid.h -o moc\moc_ToyGrid.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyGrid.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyGrid.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyGrid.h -o moc\moc_ToyGrid.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyGrid.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyGrid.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="ToyEncoder.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyEncoder.h -o moc\moc_ToyEncoder.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyEncoder.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyEncoder.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyEncoder.h -o moc\moc_ToyEncoder.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyEncoder.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyEncoder.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="ToyCmd.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyCmd.h -o moc\moc_ToyCmd.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc ToyCmd.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_ToyCmd.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe ToyCmd.h -o moc\moc_ToyCmd.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc ToyCmd.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_ToyCmd.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
+    <CustomBuild Include="ToyButton.h" />
+    <CustomBuild Include="ToyGrid.h" />
+    <CustomBuild Include="ToyEncoder.h" />
+    <CustomBuild Include="ToyCmd.h" />
     <ClInclude Include="ToyMath.h" />
-    <CustomBuild Include="Toy.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe Toy.h -o moc\moc_Toy.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc Toy.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_Toy.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe Toy.h -o moc\moc_Toy.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc Toy.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_Toy.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="SettingsPanel.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe SettingsPanel.h -o moc\moc_SettingsPanel.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc SettingsPanel.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_SettingsPanel.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe SettingsPanel.h -o moc\moc_SettingsPanel.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc SettingsPanel.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_SettingsPanel.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="Toys.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe Toys.h -o moc\moc_Toys.cpp</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe Toys.h -o moc\moc_Toys.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc Toys.h</Message>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc Toys.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_Toys.cpp</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_Toys.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
-    <CustomBuild Include="MainWindow.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe MainWindow.h -o moc\moc_MainWindow.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc MainWindow.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc\moc_MainWindow.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe MainWindow.h -o moc\moc_MainWindow.cpp</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc MainWindow.h</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc\moc_MainWindow.cpp</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\qt\Qt5.6.1\5.6\msvc2015\bin\moc.exe</AdditionalInputs>
-    </CustomBuild>
+    <CustomBuild Include="Toy.h" />
+    <CustomBuild Include="SettingsPanel.h" />
+    <CustomBuild Include="Toys.h" />
+    <CustomBuild Include="MainWindow.h" />
     <ClInclude Include="..\..\EosSyncLib\EosSyncLib\EosLog.h" />
     <ClInclude Include="..\..\EosSyncLib\EosSyncLib\EosOsc.h" />
     <ClInclude Include="..\..\EosSyncLib\EosSyncLib\EosSyncLib.h" />
@@ -360,6 +171,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="icon1.ico" />
+    <CustomBuild Include="OSCWidgets.qrc">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTOSCWIDGETS)\bin\rcc.exe -no-compress %(Filename)%(Extension) -o %(Filename)%(Extension).cpp</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTOSCWIDGETS)\bin\rcc.exe -no-compress %(Filename)%(Extension) -o %(Filename)%(Extension).cpp</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rcc'ing %(Filename)%(Extension)</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rcc'ing %(Filename)%(Extension)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename)%(Extension).cpp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename)%(Extension).cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTOSCWIDGETS)\bin\rcc.exe</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTOSCWIDGETS)\bin\rcc.exe</AdditionalInputs>
+    </CustomBuild>
+    <None Include="qt.conf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

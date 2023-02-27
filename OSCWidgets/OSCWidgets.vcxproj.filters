@@ -25,9 +25,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="OSCWidgets\Source Files\moc">
-      <UniqueIdentifier>{db9bb2de-a62b-4d6b-ba93-39da3b82e87a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -66,9 +63,6 @@
     <ClCompile Include="Toys.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OSCWidgets.qrc.cpp">
-      <Filter>OSCWidgets\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NetworkThreads.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
     </ClCompile>
@@ -90,68 +84,23 @@
     <ClCompile Include="ToyGrid.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="moc\moc_EditPanel.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_ToyWidget.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_MainWindow.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_SettingsPanel.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_Toy.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_ToyButton.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_ToyGrid.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_Toys.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
     <ClCompile Include="ToySlider.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_ToySlider.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_ToyXY.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
     </ClCompile>
     <ClCompile Include="ToyEncoder.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="moc\moc_ToyEncoder.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
     <ClCompile Include="ToyMetro.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_ToyMetro.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
     </ClCompile>
     <ClCompile Include="ToySine.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="moc\moc_ToySine.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
     <ClCompile Include="ToyCmd.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="moc\moc_ToyCmd.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
     <ClCompile Include="ToyPedal.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_ToyPedal.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
     </ClCompile>
     <ClCompile Include="Utils.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
@@ -162,29 +111,17 @@
     <ClCompile Include="ToyFlicker.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="moc\moc_ToyFlicker.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
     <ClCompile Include="FadeButton.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="moc\moc_FadeButton.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
-    </ClCompile>
     <ClCompile Include="ToyActivity.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_ToyActivity.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
     </ClCompile>
     <ClCompile Include="LogFile.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LogWidget.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_LogWidget.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
     </ClCompile>
     <ClCompile Include="EosPlatform.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
@@ -194,9 +131,6 @@
     </ClCompile>
     <ClCompile Include="ToyWindow.cpp">
       <Filter>OSCWidgets\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_ToyWindow.cpp">
-      <Filter>OSCWidgets\Source Files\moc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -313,6 +247,9 @@
     <CustomBuild Include="ToyWindow.h">
       <Filter>OSCWidgets\Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="OSCWidgets.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OSCWidgets.rc">
@@ -321,6 +258,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="icon1.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="qt.conf">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
