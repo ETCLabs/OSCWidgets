@@ -493,6 +493,7 @@ void EditFrame::paintEvent(QPaintEvent* /*event*/)
 
 ToyWindowTab::ToyWindowTab(QWidget *parent)
 	: QWidget(parent)
+	, m_Mode(ToyWidget::MODE_DEFAULT)
 	, m_ShowGrid(false)
 	, m_MouseDown(false)
 {
@@ -773,6 +774,9 @@ bool ToyWindowTab::event(QEvent *event)
 	{
 		case QEvent::PaletteChange:
 			UpdateGridBackground();
+			break;
+
+		default:
 			break;
 	}
 	
