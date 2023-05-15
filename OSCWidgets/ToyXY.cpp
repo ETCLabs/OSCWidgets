@@ -26,10 +26,10 @@
 
 FadeXY::FadeXY(QWidget *parent)
 	: FadeButton(parent)
-	, m_TextMargin(0)
-	, m_LabelMargin(0)
 	, m_Pos(0.5, 0.5)
 	, m_MouseDown(false)
+	, m_TextMargin(0)
+	, m_LabelMargin(0)
 {
 	m_RecvPos.pending = false;
 	m_RecvPos.pos = QPointF(0, 0);

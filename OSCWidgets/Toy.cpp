@@ -96,7 +96,7 @@ Toy* Toy::Create(EnumToyType type, Client *pClient, QWidget *parent, Qt::WindowF
 		case TOY_WINDOW:		return (new ToyWindow(pClient,parent,flags));
 	}
 	
-	return 0;
+	return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -148,7 +148,7 @@ void Toy::GetDefaultPathName(EnumToyType type, QString &name)
 void Toy::SetDefaultWindowIcon(QWidget &w)
 {
 	// NOTE: looks cleaner without window icons on Mac
-
+	Q_UNUSED(w);
 #ifdef WIN32
 	static QIcon *sIcon = 0;
 	if( !sIcon )

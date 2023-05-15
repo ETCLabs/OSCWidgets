@@ -25,8 +25,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 AddToyButton::AddToyButton(int type, QWidget *parent)
-	: m_Type(type)
-	, QPushButton(parent)
+	: QPushButton(parent)
+	, m_Type(type)
 {
 	QString label;
 	Toy::GetName(static_cast<Toy::EnumToyType>(m_Type), label);
