@@ -50,6 +50,9 @@ Temporary Items
 xcuserdata
 project.xcworkspace
 
+# Qt Creator
+*.pro.user
+
 # Build folders
 OSCWidgets/x64
 build
