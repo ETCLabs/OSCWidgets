@@ -130,7 +130,8 @@ void FadeSine::Update(unsigned int ms)
 	if(!m_Paused && ms!=0)
 	{
 		m_Pos = fmod(m_Pos + ms*m_Speed, static_cast<float>(TWO_PI));
-		emit tick( sinf(m_Pos) );
+		float percent = (sinf(m_Pos) + 1) * 0.5f;
+		emit tick(percent);
 		update();
 	}
 }
