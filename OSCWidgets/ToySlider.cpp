@@ -26,10 +26,10 @@
 
 FadeSlider::FadeSlider(QWidget *parent)
 	: FadeButton(parent)
-	, m_TextMargin(0)
-	, m_LabelMargin(0)
 	, m_Percent(0)
 	, m_MouseDown(false)
+	, m_TextMargin(0)
+	, m_LabelMargin(0)
 {
 	m_RecvPercent.pending = false;
 	m_RecvPercent.percent = 0;

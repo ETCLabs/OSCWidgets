@@ -132,7 +132,7 @@ void GridSizeMenu::onHovered(int col, int row)
 void GridSizeMenu::onClicked(int col, int row)
 {
 	emit gridResized(m_Id, QSize(col+1,row+1));
-	emit triggered(0);
+	emit triggered(nullptr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,11 +141,11 @@ ToyGrid::ToyGrid(EnumToyType type, Client *pClient, QWidget *parent, Qt::WindowF
 	: Toy(type, pClient, parent, flags)
 	, m_Mode(ToyWidget::MODE_DEFAULT)
 	, m_GridSize(0, 0)
-	, m_SendOnConnect(false)
+	, m_EditPanel(nullptr)
 	, m_IgnoreEdits(0)
-	, m_pContextMenu(0)
+	, m_SendOnConnect(false)
+	, m_pContextMenu(nullptr)
 	, m_Loading(false)
-	, m_EditPanel(0)
 {
 	QString name;
 	Toy::GetName(m_Type, name);

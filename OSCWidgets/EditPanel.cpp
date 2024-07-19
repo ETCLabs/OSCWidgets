@@ -28,8 +28,8 @@
 EditButton::EditButton(QWidget *parent)
 	: QPushButton(parent)
 	, m_Selected(false)
-	, m_T(PI_PLUS_PI_2)
 	, m_Alpha(0)
+	, m_T(PI_PLUS_PI_2)
 {
 	m_Timer = new QTimer(this);
 	connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTick()));

@@ -27,9 +27,9 @@
 
 ToyWidget::ToyWidget(QWidget *parent)
 	: QWidget(parent)
-	, m_Widget(0)
 	, m_Mode(MODE_DEFAULT)
 	, m_Visible(true)
+	, m_Widget(nullptr)
 	, m_Min("0")
 	, m_Max("1")
 	, m_Min2("0")

@@ -341,6 +341,7 @@ LRESULT CALLBACK EosMouseMsgProc(int nCode, WPARAM wParam, LPARAM lParam)
 
 void Utils::BlockFakeMouseEvents(bool b)
 {
+	Q_UNUSED(b);
 #ifdef WIN32
 	if( b )
 	{
