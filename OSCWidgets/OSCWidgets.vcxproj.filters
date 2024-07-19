@@ -247,7 +247,7 @@
     <CustomBuild Include="ToyWindow.h">
       <Filter>OSCWidgets\Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="OSCWidgets.qrc">
+    <CustomBuild Include="qt.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
   </ItemGroup>

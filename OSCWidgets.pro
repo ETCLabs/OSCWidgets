@@ -85,7 +85,7 @@ SOURCES = \
    ../EosSyncLib/EosSyncLib/EosUdp.cpp \
    ../EosSyncLib/EosSyncLib/OSCParser.cpp
 
-RESOURCES     = OSCWidgets/OSCWidgets.qrc
+RESOURCES     = OSCWidgets/qt.qrc
 
 OBJECTIVE_SOURCES += OSCWidgets/EosPlatform_Mac_Native.mm
 unix {
