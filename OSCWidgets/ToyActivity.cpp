@@ -118,6 +118,9 @@ void FadeActivity::SetOn(bool b)
 			case FADE_OUT:
 				onUpdate();
 				break;
+
+			default:
+				break;
 		}
 	}
 }
@@ -144,6 +147,9 @@ float FadeActivity::GetFadeOpacity() const
 
 		case FADE_OUT:
 			return (1.0f - GetFadePercent());
+
+		default:
+			break;
 	}
 
 	return 0;
@@ -165,6 +171,9 @@ float FadeActivity::GetFadePercent() const
 
 		case FADE_OUT:
 			return ((m_FadeTiming.out==0) ? 1.0f : (m_FadeElapsed/static_cast<float>(m_FadeTiming.out)));
+
+		default:
+			break;
 	}
 
 	return 0;

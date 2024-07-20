@@ -123,6 +123,9 @@ void FadePedal::Update(unsigned int ms)
 				}
 			}
 			break;
+
+		default:
+			break;
 	}
 	
 	// age ticks, but always keep last ticked value

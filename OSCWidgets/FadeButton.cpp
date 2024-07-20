@@ -448,6 +448,9 @@ bool FadeButton::event(QEvent *event)
 					event->accept();
 				}
 				return true;
+
+			default:
+				break;
 		}
 	}
 	
