@@ -197,7 +197,6 @@ private:
   Toy::EnumToyType m_ToyTreeType;
   QSystemTrayIcon *m_SystemTray;
   QMenu *m_SystemTrayMenu;
-  unsigned int m_CloseAllowed;
   EosPlatform *m_pPlatform;
   bool m_SystemIdleAllowed;
 

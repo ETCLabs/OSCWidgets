@@ -185,7 +185,6 @@ MainWindow::MainWindow(EosPlatform *platform, QWidget *parent /*=0*/, Qt::Window
   , m_TcpClientThread(0)
   , m_ToyTreeToyIndex(0)
   , m_ToyTreeType(Toy::TOY_INVALID)
-  , m_CloseAllowed(0)
   , m_pPlatform(platform)
   , m_SystemIdleAllowed(true)
 {
@@ -990,29 +989,29 @@ void MainWindow::onOpenLogClicked()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-  if (m_CloseAllowed != 0)
+  if (event->spontaneous())
   {
-    if (m_Unsaved)
-      setVisible(true);
+    // main window was closed only, just hide it instead
+    hide();
+    event->ignore();
+    return;
+  }
+  
+  if (m_Unsaved)
+    setVisible(true);
 
-    bool abortPendingOperation = false;
-    PromptForUnsavedChanges(abortPendingOperation);
-    if (abortPendingOperation)
-    {
-      event->ignore();
-    }
-    else
-    {
-      QString path;
-      GetPersistentSavePath(path);
-      SaveFile(path, /*setLastFile*/ false);
-      QApplication::exit(0);
-    }
+  bool abortPendingOperation = false;
+  PromptForUnsavedChanges(abortPendingOperation);
+  if (abortPendingOperation)
+  {
+    event->ignore();
   }
   else
   {
-    hide();
-    event->ignore();
+    QString path;
+    GetPersistentSavePath(path);
+    SaveFile(path, /*setLastFile*/ false);
+    QApplication::exit(0);
   }
 }
 
@@ -1221,9 +1220,7 @@ void MainWindow::onSystemTrayToggledMainWindow()
 
 void MainWindow::onSystemTrayExit()
 {
-  m_CloseAllowed++;
   close();
-  m_CloseAllowed--;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
