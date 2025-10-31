@@ -68,14 +68,18 @@ elseif(APPLE)
     "../EosSyncLib/EosSyncLib/EosUdp_Mac.cpp"
   )
 
-  set(HEADERS ${HEADERS}
+  file(GLOB MAC_HEADERS
     "OSCWidgets/Mac/*.h"
   )
 
-  set(SOURCES ${SOURCES}
+  set(HEADERS ${HEADERS} ${MAC_HEADERS})
+
+  file(GLOB MAC_SOURCES
     "OSCWidgets/Mac/*.cpp"
     "OSCWidgets/Mac/*.mm"
   )
+
+  set(SOURCES ${SOURCES} ${MAC_SOURCES})
 
   set(RESOURCE_FILES
     "OSCWidgets/qt.conf"
