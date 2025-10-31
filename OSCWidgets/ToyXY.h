@@ -28,101 +28,98 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class FadeXY
-	: public FadeButton
+class FadeXY : public FadeButton
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	FadeXY(QWidget *parent);
+  FadeXY(QWidget *parent);
 
-	virtual void SetText(const QString &text);
-	virtual void SetLabel(const QString &label);
-	virtual void SetPos(const QPointF &pos);
-	virtual void RecvPos(const QPointF &pos);
-	virtual void TriggerPos(const QPointF &pos);
-	virtual const QPointF& GetPos() const {return m_Pos;}
-	virtual bool GetMouseDown() const {return m_MouseDown;}
+  virtual void SetText(const QString &text);
+  virtual void SetLabel(const QString &label);
+  virtual void SetPos(const QPointF &pos);
+  virtual void RecvPos(const QPointF &pos);
+  virtual void TriggerPos(const QPointF &pos);
+  virtual const QPointF &GetPos() const { return m_Pos; }
+  virtual bool GetMouseDown() const { return m_MouseDown; }
 
 signals:
-	void posChanged(const QPointF &pos);
+  void posChanged(const QPointF &pos);
 
 private slots:
-	void onRecvTimeout();
+  void onRecvTimeout();
 
 protected:
-	struct sRecvPos
-	{
-		bool	pending;
-		QPointF	pos;
-		QTimer	*timer;
-	};
+  struct sRecvPos
+  {
+    bool pending;
+    QPointF pos;
+    QTimer *timer;
+  };
 
-	QPointF		m_Pos;
-	sRecvPos	m_RecvPos;
-	bool		m_MouseDown;
-	int			m_TextMargin;
-	int			m_LabelMargin;
-	QImage		m_Canvas;
+  QPointF m_Pos;
+  sRecvPos m_RecvPos;
+  bool m_MouseDown;
+  int m_TextMargin;
+  int m_LabelMargin;
+  QImage m_Canvas;
 
-	virtual void UpdateMargins();
-	virtual void AutoSizeFont();
-	virtual void SetPosPrivate(const QPointF &pos, bool user);
-	virtual QPoint PosToWidgetPos(const QPointF &pos);
-	virtual QPointF WidgetPosToPos(const QPoint &pos);
-	virtual void ClipWidgetPosForPainting(const QRectF &r, QPoint &pos) const;
-	virtual void resizeEvent(QResizeEvent *event);
-	virtual void mousePressEvent(QMouseEvent *event);
-	virtual void mouseMoveEvent(QMouseEvent *event);
-	virtual void mouseReleaseEvent(QMouseEvent *event);
-	virtual void paintEvent(QPaintEvent *event);
+  virtual void UpdateMargins();
+  virtual void AutoSizeFont();
+  virtual void SetPosPrivate(const QPointF &pos, bool user);
+  virtual QPoint PosToWidgetPos(const QPointF &pos);
+  virtual QPointF WidgetPosToPos(const QPoint &pos);
+  virtual void ClipWidgetPosForPainting(const QRectF &r, QPoint &pos) const;
+  virtual void resizeEvent(QResizeEvent *event);
+  virtual void mousePressEvent(QMouseEvent *event);
+  virtual void mouseMoveEvent(QMouseEvent *event);
+  virtual void mouseReleaseEvent(QMouseEvent *event);
+  virtual void paintEvent(QPaintEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToyXYWidget
-	: public ToyWidget
+class ToyXYWidget : public ToyWidget
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	ToyXYWidget(QWidget *parent);
-	
-	virtual const QPointF& GetPos() const;
-	virtual void SetText(const QString &text);
-	virtual void SetImagePath(const QString &imagePath);
-	virtual void SetColor(const QColor &color);
-	virtual void SetTextColor(const QColor &textColor);
-	virtual bool HasPath2() const {return true;}
-	virtual bool HasFeedbackPath() const {return true;}
-	virtual bool HasTriggerPath() const {return true;}
-	virtual bool HasMinMax2() const {return true;}
-	virtual void SetLabel(const QString &label);
-	virtual void Recv(const QString &path, const OSCArgument *args, size_t count);	
-	
+  ToyXYWidget(QWidget *parent);
+
+  virtual const QPointF &GetPos() const;
+  virtual void SetText(const QString &text);
+  virtual void SetImagePath(const QString &imagePath);
+  virtual void SetColor(const QColor &color);
+  virtual void SetTextColor(const QColor &textColor);
+  virtual bool HasPath2() const { return true; }
+  virtual bool HasFeedbackPath() const { return true; }
+  virtual bool HasTriggerPath() const { return true; }
+  virtual bool HasMinMax2() const { return true; }
+  virtual void SetLabel(const QString &label);
+  virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
+
 signals:
-	void posChanged(ToyXYWidget*);
+  void posChanged(ToyXYWidget *);
 
 private slots:
-	void onPosChanged(const QPointF &pos);
+  void onPosChanged(const QPointF &pos);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToyXYGrid
-	: public ToyGrid
+class ToyXYGrid : public ToyGrid
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	ToyXYGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
-	
+  ToyXYGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
+
 private slots:
-	void onPosChanged(ToyXYWidget*);
-	
+  void onPosChanged(ToyXYWidget *);
+
 protected:
-	virtual ToyWidget* CreateWidget();
-	virtual QSize GetDefaultWidgetSize() const {return QSize(200,200);}
+  virtual ToyWidget *CreateWidget();
+  virtual QSize GetDefaultWidgetSize() const { return QSize(200, 200); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////

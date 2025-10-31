@@ -32,107 +32,104 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define SETTING_LOG_DEPTH					"LogDepth"
-#define SETTING_FILE_DEPTH					"FileDepth"
-#define SETTING_LAST_FILE					"LastFile"
-#define SETTING_ENCODER_DEGREES_PER_TICK	"EncoderDegreesPerTick"
-#define SETTING_FEEDBACK_DELAY				"FeedbackDelay"
-#define SETTING_CMD_SEND_ALL_DELAY			"CmdSendAllDelay"
-#define SETTING_METRO_REFRESH_RATE			"MetroRefreshRate"
-#define SETTING_SINE_REFRESH_RATE			"SineWaveRefreshRate"
-#define SETTING_PEDAL_REFRESH_RATE			"PedalRefreshRate"
+#define SETTING_LOG_DEPTH "LogDepth"
+#define SETTING_FILE_DEPTH "FileDepth"
+#define SETTING_LAST_FILE "LastFile"
+#define SETTING_ENCODER_DEGREES_PER_TICK "EncoderDegreesPerTick"
+#define SETTING_FEEDBACK_DELAY "FeedbackDelay"
+#define SETTING_CMD_SEND_ALL_DELAY "CmdSendAllDelay"
+#define SETTING_METRO_REFRESH_RATE "MetroRefreshRate"
+#define SETTING_SINE_REFRESH_RATE "SineWaveRefreshRate"
+#define SETTING_PEDAL_REFRESH_RATE "PedalRefreshRate"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class AddToyButton
-	: public QPushButton
+class AddToyButton : public QPushButton
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	AddToyButton(int type, QWidget *parent);
-	
+  AddToyButton(int type, QWidget *parent);
+
 signals:
-	void addToy(int type);
-	
+  void addToy(int type);
+
 private slots:
-	void onClicked(bool checked);
-	
+  void onClicked(bool checked);
+
 protected:
-	int	m_Type;
+  int m_Type;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class AdvancedPanel
-	: public QWidget
+class AdvancedPanel : public QWidget
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	AdvancedPanel(QWidget *parent);
+  AdvancedPanel(QWidget *parent);
 
-	virtual void Load();
-	virtual void Save();
+  virtual void Load();
+  virtual void Save();
 
 signals:
-	void changed();
+  void changed();
 
 private slots:
-	void onApplyClicked(bool checked);
-	void onRestoreDefaultsClicked(bool checked);
+  void onApplyClicked(bool checked);
+  void onRestoreDefaultsClicked(bool checked);
 
 protected:
-	QLineEdit	*m_EncoderDegreesPerTick;
-	QLineEdit	*m_FeedbackDelay;
-	QLineEdit	*m_CmdSendAllDelay;
-	QLineEdit	*m_MetroRefreshRate;
-	QLineEdit	*m_SineRefreshRate;
-	QLineEdit	*m_PedalRefreshRate;
-	QLineEdit	*m_FlickerRefreshRate;
+  QLineEdit *m_EncoderDegreesPerTick;
+  QLineEdit *m_FeedbackDelay;
+  QLineEdit *m_CmdSendAllDelay;
+  QLineEdit *m_MetroRefreshRate;
+  QLineEdit *m_SineRefreshRate;
+  QLineEdit *m_PedalRefreshRate;
+  QLineEdit *m_FlickerRefreshRate;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class SettingsPanel
-	: public QWidget
+class SettingsPanel : public QWidget
 {
-	Q_OBJECT
-	
-public:
-	SettingsPanel(QWidget *parent);
-	
-	virtual OSCStream::EnumFrameMode GetMode() const;
-	virtual void SetMode(OSCStream::EnumFrameMode mode);
-	virtual void GetIP(QString &ip) const;
-	virtual void SetIP(const QString &ip);
-	virtual unsigned short GetPort1() const;
-	virtual void SetPort1(unsigned short port);
-	virtual unsigned short GetPort2() const;
-	virtual void SetPort2(unsigned short port2);
-	
-	virtual unsigned short GetUdpOutputPort() const {return GetPort1();}
-	virtual unsigned short GetUdpInputPort() const {return GetPort2();}
-	virtual unsigned short GetTcpPort() const {return GetPort1();}
-	
-signals:
-	void changed();
-	void addToy(int type);
-	
-private slots:
-	void onModeChanged(int index);
-	void onApplyClicked(bool checked);
-	void onAddToy(int type);
-	
-protected:
-	QComboBox		*m_Mode;
-	QLineEdit		*m_Ip;
-	QLabel			*m_PortLabel;
-	QSpinBox		*m_Port;
-	QLabel			*m_Port2Label;
-	QSpinBox		*m_Port2;
+  Q_OBJECT
 
-	virtual void UpdateMode();
+public:
+  SettingsPanel(QWidget *parent);
+
+  virtual OSCStream::EnumFrameMode GetMode() const;
+  virtual void SetMode(OSCStream::EnumFrameMode mode);
+  virtual void GetIP(QString &ip) const;
+  virtual void SetIP(const QString &ip);
+  virtual unsigned short GetPort1() const;
+  virtual void SetPort1(unsigned short port);
+  virtual unsigned short GetPort2() const;
+  virtual void SetPort2(unsigned short port2);
+
+  virtual unsigned short GetUdpOutputPort() const { return GetPort1(); }
+  virtual unsigned short GetUdpInputPort() const { return GetPort2(); }
+  virtual unsigned short GetTcpPort() const { return GetPort1(); }
+
+signals:
+  void changed();
+  void addToy(int type);
+
+private slots:
+  void onModeChanged(int index);
+  void onApplyClicked(bool checked);
+  void onAddToy(int type);
+
+protected:
+  QComboBox *m_Mode;
+  QLineEdit *m_Ip;
+  QLabel *m_PortLabel;
+  QSpinBox *m_Port;
+  QLabel *m_Port2Label;
+  QSpinBox *m_Port2;
+
+  virtual void UpdateMode();
 };
 
 ////////////////////////////////////////////////////////////////////////////////

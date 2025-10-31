@@ -32,103 +32,101 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class FadeActivity
-	: public FadeButton_NoTouch
+class FadeActivity : public FadeButton_NoTouch
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	enum EnumConstants
-	{
-		FADE_HOLD_INFINITE	= 0xffffffff
-	};
+  enum EnumConstants
+  {
+    FADE_HOLD_INFINITE = 0xffffffff
+  };
 
-	struct sFadeTiming
-	{
-		sFadeTiming()
-			: in(0)
-			, hold(0)
-			, out(0)
-		{}
+  struct sFadeTiming
+  {
+    sFadeTiming()
+      : in(0)
+      , hold(0)
+      , out(0)
+    {
+    }
 
-		bool operator==(const sFadeTiming &other) const;
-		bool operator!=(const sFadeTiming &other) const {return !((*this)==other);}
+    bool operator==(const sFadeTiming &other) const;
+    bool operator!=(const sFadeTiming &other) const { return !((*this) == other); }
 
-		unsigned int	in;
-		unsigned int	hold;
-		unsigned int	out;
-	};
+    unsigned int in;
+    unsigned int hold;
+    unsigned int out;
+  };
 
-	FadeActivity(QWidget *parent);
+  FadeActivity(QWidget *parent);
 
-	virtual void SetText(const QString &text);
-	virtual void SetFadeTiming(const sFadeTiming &fadeTiming);
-	virtual void SetOn(bool b);
+  virtual void SetText(const QString &text);
+  virtual void SetFadeTiming(const sFadeTiming &fadeTiming);
+  virtual void SetOn(bool b);
 
 private slots:
-	void onUpdate();
+  void onUpdate();
 
 protected:
-	enum EnumFadeState
-	{
-		FADE_OFF,
-		FADE_IN,
-		FADE_ON,
-		FADE_OUT
-	};
+  enum EnumFadeState
+  {
+    FADE_OFF,
+    FADE_IN,
+    FADE_ON,
+    FADE_OUT
+  };
 
-	QTimer			*m_ActivityTimer;
-	EosTimer		m_ActivityEosTimer;
-	sFadeTiming		m_FadeTiming;
-	EnumFadeState	m_FadeState;
-	unsigned int	m_FadeElapsed;
+  QTimer *m_ActivityTimer;
+  EosTimer m_ActivityEosTimer;
+  sFadeTiming m_FadeTiming;
+  EnumFadeState m_FadeState;
+  unsigned int m_FadeElapsed;
 
-	virtual float GetFadeOpacity() const;
-	virtual float GetFadePercent() const;
-	virtual void StartActivityTimer();
-	virtual void paintEvent(QPaintEvent *event);
+  virtual float GetFadeOpacity() const;
+  virtual float GetFadePercent() const;
+  virtual void StartActivityTimer();
+  virtual void paintEvent(QPaintEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToyActivityWidget
-	: public ToyWidget
+class ToyActivityWidget : public ToyWidget
 {
 public:
-	ToyActivityWidget(QWidget *parent);
-	
-	virtual void SetText(const QString &text);
-	virtual void SetImagePath(const QString &imagePath);
-	virtual void SetColor(const QColor &color);
-	virtual void SetTextColor(const QColor &textColor);
-	virtual void SetMin2(const QString &n);
-	virtual void SetMax2(const QString &n);
-	virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
-	virtual void SetLabel(const QString &label);
-	virtual bool HasPath() const {return false;}
-	virtual bool HasMinMax2() const {return true;}
-    virtual bool HasFeedbackPath() const {return true;}
+  ToyActivityWidget(QWidget *parent);
+
+  virtual void SetText(const QString &text);
+  virtual void SetImagePath(const QString &imagePath);
+  virtual void SetColor(const QColor &color);
+  virtual void SetTextColor(const QColor &textColor);
+  virtual void SetMin2(const QString &n);
+  virtual void SetMax2(const QString &n);
+  virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
+  virtual void SetLabel(const QString &label);
+  virtual bool HasPath() const { return false; }
+  virtual bool HasMinMax2() const { return true; }
+  virtual bool HasFeedbackPath() const { return true; }
 
 protected:
-	unsigned int	m_FadeDuration;
-	unsigned int	m_HoldDuration;
+  unsigned int m_FadeDuration;
+  unsigned int m_HoldDuration;
 
-	virtual void MakeFadeTiming(bool flash, FadeActivity::sFadeTiming &fadeTiming);
+  virtual void MakeFadeTiming(bool flash, FadeActivity::sFadeTiming &fadeTiming);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToyActivityGrid
-	: public ToyGrid
+class ToyActivityGrid : public ToyGrid
 {
 public:
-	ToyActivityGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
-	
-	virtual void GetDefaultGridSize(QSize &gridSize) const {gridSize = QSize(3,1);}
+  ToyActivityGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
+
+  virtual void GetDefaultGridSize(QSize &gridSize) const { gridSize = QSize(3, 1); }
 
 protected:
-	virtual ToyWidget* CreateWidget();
-	virtual void ApplyDefaultSettings(ToyWidget *widget, size_t index);
+  virtual ToyWidget *CreateWidget();
+  virtual void ApplyDefaultSettings(ToyWidget *widget, size_t index);
 };
 
 ////////////////////////////////////////////////////////////////////////////////

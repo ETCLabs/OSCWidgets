@@ -32,61 +32,61 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class LogWidget
-	: public QWidget
+class LogWidget : public QWidget
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	LogWidget(size_t maxLineCount, QWidget *parent);
+  LogWidget(size_t maxLineCount, QWidget *parent);
 
-	virtual void Clear();
-	virtual void Log(EosLog::LOG_Q &logQ);
-	virtual QSize sizeHint() const {return QSize(400,150);}
+  virtual void Clear();
+  virtual void Log(EosLog::LOG_Q &logQ);
+  virtual QSize sizeHint() const { return QSize(400, 150); }
 
 private slots:
-	void onVScrollChanged(int value);
-	void onHScrollChanged(int value);
+  void onVScrollChanged(int value);
+  void onHScrollChanged(int value);
 
 protected:
-	struct sLine
-	{
-		QString	text;
-		QColor	color;
-	};
+  struct sLine
+  {
+    QString text;
+    QColor color;
+  };
 
-	typedef std::vector<sLine> RING_BUFFER;
+  typedef std::vector<sLine> RING_BUFFER;
 
-	struct sRingBufferIndex
-	{
-		sRingBufferIndex()
-			: head(0)
-			, tail(0)
-		{}
-		bool valid() const {return (head!=tail);}
-		bool invalid() const {return (head==tail);}
-		size_t	head;
-		size_t	tail;
-	};
+  struct sRingBufferIndex
+  {
+    sRingBufferIndex()
+      : head(0)
+      , tail(0)
+    {
+    }
+    bool valid() const { return (head != tail); }
+    bool invalid() const { return (head == tail); }
+    size_t head;
+    size_t tail;
+  };
 
-	RING_BUFFER			m_Lines;
-	sRingBufferIndex	m_Index;
-	int					m_LineHeight;
-	int					m_LineWidth;
-	QScrollBar			*m_VScrollBar;
-	QScrollBar			*m_HScrollBar;
-	bool				m_ForwardingWheelEvent;
-	bool				m_AutoScroll;
+  RING_BUFFER m_Lines;
+  sRingBufferIndex m_Index;
+  int m_LineHeight;
+  int m_LineWidth;
+  QScrollBar *m_VScrollBar;
+  QScrollBar *m_HScrollBar;
+  bool m_ForwardingWheelEvent;
+  bool m_AutoScroll;
 
-	virtual size_t GetNumLines() const;
-	virtual void GetContentsRect(QRect &r) const;
-	virtual void UpdateFont();
-	virtual void UpdateVScrollBar();
-	virtual void UpdateHScrollBar();
-	virtual bool event(QEvent *event);
-	virtual void resizeEvent(QResizeEvent *event);
-	virtual void paintEvent(QPaintEvent *event);
-	virtual void wheelEvent(QWheelEvent *event);
+  virtual size_t GetNumLines() const;
+  virtual void GetContentsRect(QRect &r) const;
+  virtual void UpdateFont();
+  virtual void UpdateVScrollBar();
+  virtual void UpdateHScrollBar();
+  virtual bool event(QEvent *event);
+  virtual void resizeEvent(QResizeEvent *event);
+  virtual void paintEvent(QPaintEvent *event);
+  virtual void wheelEvent(QWheelEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////

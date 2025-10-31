@@ -32,60 +32,57 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class FadeLabel
-	: public FadeButton_NoTouch
+class FadeLabel : public FadeButton_NoTouch
 {
 public:
-	FadeLabel(QWidget *parent);
-	
+  FadeLabel(QWidget *parent);
+
 protected:
-	virtual void paintEvent(QPaintEvent *event);
+  virtual void paintEvent(QPaintEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToyLabelWidget
-	: public ToyWidget
+class ToyLabelWidget : public ToyWidget
 {
 public:
-	ToyLabelWidget(Toy::Client *pClient, QWidget *parent);
-	
-	virtual void SetText(const QString &text);
-	virtual void SetImagePath(const QString &imagePath);
-	virtual void SetColor(const QColor &color);
-	virtual void SetColor2(const QColor &color2);
-	virtual bool HasColor2() const {return true;}
-	virtual void SetTextColor(const QColor &textColor);
-	virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
-	virtual void SetLabel(const QString &label);
-	virtual void ClearLabel();
-	virtual bool HasPath() const {return false;}
-	virtual bool HasMinMax() const {return false;}
-	virtual bool HasFeedbackPath() const {return false;}
-	virtual bool HasTriggerPath() const {return true;}
-	
+  ToyLabelWidget(Toy::Client *pClient, QWidget *parent);
+
+  virtual void SetText(const QString &text);
+  virtual void SetImagePath(const QString &imagePath);
+  virtual void SetColor(const QColor &color);
+  virtual void SetColor2(const QColor &color2);
+  virtual bool HasColor2() const { return true; }
+  virtual void SetTextColor(const QColor &textColor);
+  virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
+  virtual void SetLabel(const QString &label);
+  virtual void ClearLabel();
+  virtual bool HasPath() const { return false; }
+  virtual bool HasMinMax() const { return false; }
+  virtual bool HasFeedbackPath() const { return false; }
+  virtual bool HasTriggerPath() const { return true; }
+
 protected:
-	enum EnumConstants
-	{
-		IMAGE_PATH_INDEX_DEFAULT		= 0,
-		IMAGE_PATH_INDEX_FROM_TRIGGER	= 1
-	};
-	
-	Toy::Client	*m_pClient;
+  enum EnumConstants
+  {
+    IMAGE_PATH_INDEX_DEFAULT = 0,
+    IMAGE_PATH_INDEX_FROM_TRIGGER = 1
+  };
+
+  Toy::Client *m_pClient;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToyLabelGrid
-	: public ToyGrid
-{	
+class ToyLabelGrid : public ToyGrid
+{
 public:
-	ToyLabelGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
-	
+  ToyLabelGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
+
 protected:
-	virtual ToyWidget* CreateWidget();
-	virtual QSize GetDefaultWidgetSize() const {return QSize(200,40);}
-	virtual void ApplyDefaultSettings(ToyWidget *widget, size_t index);
+  virtual ToyWidget *CreateWidget();
+  virtual QSize GetDefaultWidgetSize() const { return QSize(200, 40); }
+  virtual void ApplyDefaultSettings(ToyWidget *widget, size_t index);
 };
 
 ////////////////////////////////////////////////////////////////////////////////

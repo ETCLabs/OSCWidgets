@@ -28,114 +28,115 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class FadeSine
-	: public FadeButton
+class FadeSine : public FadeButton
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	FadeSine(QWidget *parent);
+  FadeSine(QWidget *parent);
 
-	virtual void ReCenter();
-	virtual float GetPos() const {return m_Pos;}
-	virtual void SetPos(float pos) {m_Pos=pos; update();}
-	virtual void SetText(const QString &text);
-	virtual void SetLabel(const QString &label);
-	virtual void Update(unsigned int ms);
-	virtual float GetBPM() const {return m_BPM;}
-	virtual void SetBPM(float bpm);
-	virtual bool GetPaused() const {return m_Paused;}
-	virtual void SetPaused(bool b);
+  virtual void ReCenter();
+  virtual float GetPos() const { return m_Pos; }
+  virtual void SetPos(float pos)
+  {
+    m_Pos = pos;
+    update();
+  }
+  virtual void SetText(const QString &text);
+  virtual void SetLabel(const QString &label);
+  virtual void Update(unsigned int ms);
+  virtual float GetBPM() const { return m_BPM; }
+  virtual void SetBPM(float bpm);
+  virtual bool GetPaused() const { return m_Paused; }
+  virtual void SetPaused(bool b);
 
 signals:
-	void tick(float value);
+  void tick(float value);
 
 private slots:
-	void onClicked(bool checked);
+  void onClicked(bool checked);
 
 protected:
-	enum EnumConstants
-	{
-		NUM_POINTS	= 50
-	};
-	
-	int				m_TextMargin;
-	int				m_LabelMargin;
-	float			m_Pos;
-	float			m_Speed;
-	float			m_BPM;
-	bool			m_Paused;
-	QPointF			m_Points[NUM_POINTS];
+  enum EnumConstants
+  {
+    NUM_POINTS = 50
+  };
 
-	virtual void UpdateSpeed();
-	virtual void AutoSizeFont();
-	virtual void UpdateMargins();
-	virtual void resizeEvent(QResizeEvent *event);
-	virtual void paintEvent(QPaintEvent *event);
+  int m_TextMargin;
+  int m_LabelMargin;
+  float m_Pos;
+  float m_Speed;
+  float m_BPM;
+  bool m_Paused;
+  QPointF m_Points[NUM_POINTS];
+
+  virtual void UpdateSpeed();
+  virtual void AutoSizeFont();
+  virtual void UpdateMargins();
+  virtual void resizeEvent(QResizeEvent *event);
+  virtual void paintEvent(QPaintEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToySineWidget
-	: public ToyWidget
+class ToySineWidget : public ToyWidget
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	ToySineWidget(QWidget *parent);
-	
-	virtual void SetText(const QString &text);
-	virtual void SetImagePath(const QString &imagePath);
-	virtual void SetColor(const QColor &color);
-	virtual void SetTextColor(const QColor &textColor);
-	virtual bool HasTriggerPath() const {return true;}
-	virtual void SetBPM(const QString &bpm);
-	virtual bool HasBPM() const {return true;}
-	virtual void SetLabel(const QString &label);
-	virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
-	virtual void Update(unsigned int ms);
-	virtual FadeSine& GetSine() {return *static_cast<FadeSine*>(m_Widget);}
-	
+  ToySineWidget(QWidget *parent);
+
+  virtual void SetText(const QString &text);
+  virtual void SetImagePath(const QString &imagePath);
+  virtual void SetColor(const QColor &color);
+  virtual void SetTextColor(const QColor &textColor);
+  virtual bool HasTriggerPath() const { return true; }
+  virtual void SetBPM(const QString &bpm);
+  virtual bool HasBPM() const { return true; }
+  virtual void SetLabel(const QString &label);
+  virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
+  virtual void Update(unsigned int ms);
+  virtual FadeSine &GetSine() { return *static_cast<FadeSine *>(m_Widget); }
+
 signals:
-	void tick(ToySineWidget*, float value);
+  void tick(ToySineWidget *, float value);
 
 private slots:
-	void onTick(float value);
+  void onTick(float value);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToySineGrid
-	: public ToyGrid
+class ToySineGrid : public ToyGrid
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	ToySineGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
+  ToySineGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
 
-	virtual void StartTimer();
-	virtual void StopTimer();
-	
+  virtual void StartTimer();
+  virtual void StopTimer();
+
 private slots:
-	void onTick(ToySineWidget*, float value);
-	void onTimeout();
-	void onPlayClicked(bool checked);
-	void onPauseClicked(bool checked);
-	void onReCenterClicked(bool checked);
-	void onFanClicked(bool checked);
-	
-protected:
-	QTimer		*m_Timer;
-	EosTimer	m_ElapsedTimer;
-	FadeButton	*m_Play;
-	FadeButton	*m_Pause;
-	FadeButton	*m_ReCenter;
-	FadeButton	*m_Fan;
+  void onTick(ToySineWidget *, float value);
+  void onTimeout();
+  void onPlayClicked(bool checked);
+  void onPauseClicked(bool checked);
+  void onReCenterClicked(bool checked);
+  void onFanClicked(bool checked);
 
-	virtual ToyWidget* CreateWidget();
-	virtual QSize GetDefaultWidgetSize() const {return QSize(180,120);}
-	virtual void UpdateLayout();
-	virtual void AutoSize(const QSize &widgetSize);
+protected:
+  QTimer *m_Timer;
+  EosTimer m_ElapsedTimer;
+  FadeButton *m_Play;
+  FadeButton *m_Pause;
+  FadeButton *m_ReCenter;
+  FadeButton *m_Fan;
+
+  virtual ToyWidget *CreateWidget();
+  virtual QSize GetDefaultWidgetSize() const { return QSize(180, 120); }
+  virtual void UpdateLayout();
+  virtual void AutoSize(const QSize &widgetSize);
 };
 
 ////////////////////////////////////////////////////////////////////////////////

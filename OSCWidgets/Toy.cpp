@@ -35,13 +35,13 @@
 #include "ToyWindow.h"
 
 #ifdef WIN32
-	#include <Windows.h>
-	#include "resource.h"
+#include <Windows.h>
+#include "resource.h"
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define SNAP_TO_EDGE_PIX	100
+#define SNAP_TO_EDGE_PIX 100
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -56,119 +56,117 @@ unsigned int Toy::sm_FlickerRefreshRateMS = 0;
 ////////////////////////////////////////////////////////////////////////////////
 
 Toy::Toy(EnumToyType type, Client *pClient, QWidget *parent, Qt::WindowFlags flags)
-	: QWidget(parent, flags)
-	, m_Type(type)
-	, m_pClient(pClient)
+  : QWidget(parent, flags)
+  , m_Type(type)
+  , m_pClient(pClient)
 {
-	QPalette pal( palette() );
-	pal.setColor(QPalette::ButtonText, QColor(200,200,200));
-	setPalette(pal);
-	
-	setContentsMargins(MARGIN, MARGIN, MARGIN, MARGIN);
+  QPalette pal(palette());
+  pal.setColor(QPalette::ButtonText, QColor(200, 200, 200));
+  setPalette(pal);
 
-	SetDefaultWindowIcon(*this);
+  setContentsMargins(MARGIN, MARGIN, MARGIN, MARGIN);
+
+  SetDefaultWindowIcon(*this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Toy::~Toy()
-{
-}
+Toy::~Toy() {}
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Toy* Toy::Create(EnumToyType type, Client *pClient, QWidget *parent, Qt::WindowFlags flags)
+Toy *Toy::Create(EnumToyType type, Client *pClient, QWidget *parent, Qt::WindowFlags flags)
 {
-	switch( type )
-	{
-		case TOY_BUTTON_GRID:	return (new ToyButtonGrid(pClient,parent,flags));
-		case TOY_PEDAL_GRID:	return (new ToyPedalGrid(pClient,parent,flags));
-		case TOY_SLIDER_GRID:	return (new ToySliderGrid(pClient,parent,flags));
-		case TOY_ENCODER_GRID:	return (new ToyEncoderGrid(pClient,parent,flags));
-		case TOY_XY_GRID:		return (new ToyXYGrid(pClient,parent,flags));
-		case TOY_CMD_GRID:		return (new ToyCmdGrid(pClient,parent,flags));
-		case TOY_METRO_GRID:	return (new ToyMetroGrid(pClient,parent,flags));
-		case TOY_SINE_GRID:		return (new ToySineGrid(pClient,parent,flags));
-		case TOY_FLICKER_GRID:	return (new ToyFlickerGrid(pClient,parent,flags));
-		case TOY_ACTIVITY_GRID:	return (new ToyActivityGrid(pClient,parent,flags));
-		case TOY_LABEL_GRID:	return (new ToyLabelGrid(pClient,parent,flags));
-		case TOY_WINDOW:		return (new ToyWindow(pClient,parent,flags));
-	}
-	
-	return 0;
+  switch (type)
+  {
+    case TOY_BUTTON_GRID: return (new ToyButtonGrid(pClient, parent, flags));
+    case TOY_PEDAL_GRID: return (new ToyPedalGrid(pClient, parent, flags));
+    case TOY_SLIDER_GRID: return (new ToySliderGrid(pClient, parent, flags));
+    case TOY_ENCODER_GRID: return (new ToyEncoderGrid(pClient, parent, flags));
+    case TOY_XY_GRID: return (new ToyXYGrid(pClient, parent, flags));
+    case TOY_CMD_GRID: return (new ToyCmdGrid(pClient, parent, flags));
+    case TOY_METRO_GRID: return (new ToyMetroGrid(pClient, parent, flags));
+    case TOY_SINE_GRID: return (new ToySineGrid(pClient, parent, flags));
+    case TOY_FLICKER_GRID: return (new ToyFlickerGrid(pClient, parent, flags));
+    case TOY_ACTIVITY_GRID: return (new ToyActivityGrid(pClient, parent, flags));
+    case TOY_LABEL_GRID: return (new ToyLabelGrid(pClient, parent, flags));
+    case TOY_WINDOW: return (new ToyWindow(pClient, parent, flags));
+  }
+
+  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void Toy::GetName(EnumToyType type, QString &name)
 {
-	switch( type )
-	{
-		case TOY_BUTTON_GRID:	name=qApp->tr("Buttons"); break;
-		case TOY_PEDAL_GRID:	name=qApp->tr("Pedals"); break;
-		case TOY_SLIDER_GRID:	name=qApp->tr("Faders"); break;
-		case TOY_ENCODER_GRID:	name=qApp->tr("Encoders"); break;
-		case TOY_XY_GRID:		name=qApp->tr("XYs"); break;
-		case TOY_METRO_GRID:	name=qApp->tr("Metronomes"); break;
-		case TOY_SINE_GRID:		name=qApp->tr("Sine Waves"); break;
-		case TOY_CMD_GRID:		name=qApp->tr("Commands"); break;
-		case TOY_FLICKER_GRID:	name=qApp->tr("Flicker"); break;
-		case TOY_ACTIVITY_GRID:	name=qApp->tr("Activity"); break;
-		case TOY_LABEL_GRID:	name=qApp->tr("Label"); break;
-		case TOY_WINDOW:		name=qApp->tr("Window"); break;
-		default:				name.clear(); break;
-	}
+  switch (type)
+  {
+    case TOY_BUTTON_GRID: name = qApp->tr("Buttons"); break;
+    case TOY_PEDAL_GRID: name = qApp->tr("Pedals"); break;
+    case TOY_SLIDER_GRID: name = qApp->tr("Faders"); break;
+    case TOY_ENCODER_GRID: name = qApp->tr("Encoders"); break;
+    case TOY_XY_GRID: name = qApp->tr("XYs"); break;
+    case TOY_METRO_GRID: name = qApp->tr("Metronomes"); break;
+    case TOY_SINE_GRID: name = qApp->tr("Sine Waves"); break;
+    case TOY_CMD_GRID: name = qApp->tr("Commands"); break;
+    case TOY_FLICKER_GRID: name = qApp->tr("Flicker"); break;
+    case TOY_ACTIVITY_GRID: name = qApp->tr("Activity"); break;
+    case TOY_LABEL_GRID: name = qApp->tr("Label"); break;
+    case TOY_WINDOW: name = qApp->tr("Window"); break;
+    default: name.clear(); break;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void Toy::GetDefaultPathName(EnumToyType type, QString &name)
 {
-	switch( type )
-	{
-		case TOY_BUTTON_GRID:	name=qApp->tr("button"); break;
-		case TOY_PEDAL_GRID:	name=qApp->tr("pedal"); break;
-		case TOY_SLIDER_GRID:	name=qApp->tr("fader"); break;
-		case TOY_ENCODER_GRID:	name=qApp->tr("encoder"); break;
-		case TOY_XY_GRID:		name=qApp->tr("xy"); break;
-		case TOY_METRO_GRID:	name=qApp->tr("metro"); break;
-		case TOY_SINE_GRID:		name=qApp->tr("sine"); break;
-		case TOY_CMD_GRID:		name=qApp->tr("cmd"); break;
-		case TOY_FLICKER_GRID:	name=qApp->tr("flicker"); break;
-		case TOY_ACTIVITY_GRID:	name=qApp->tr("activity"); break;
-		case TOY_LABEL_GRID:	name=qApp->tr("label"); break;
-		case TOY_WINDOW:		name=qApp->tr("window"); break;
-		default:				name.clear(); break;
-	}
+  switch (type)
+  {
+    case TOY_BUTTON_GRID: name = qApp->tr("button"); break;
+    case TOY_PEDAL_GRID: name = qApp->tr("pedal"); break;
+    case TOY_SLIDER_GRID: name = qApp->tr("fader"); break;
+    case TOY_ENCODER_GRID: name = qApp->tr("encoder"); break;
+    case TOY_XY_GRID: name = qApp->tr("xy"); break;
+    case TOY_METRO_GRID: name = qApp->tr("metro"); break;
+    case TOY_SINE_GRID: name = qApp->tr("sine"); break;
+    case TOY_CMD_GRID: name = qApp->tr("cmd"); break;
+    case TOY_FLICKER_GRID: name = qApp->tr("flicker"); break;
+    case TOY_ACTIVITY_GRID: name = qApp->tr("activity"); break;
+    case TOY_LABEL_GRID: name = qApp->tr("label"); break;
+    case TOY_WINDOW: name = qApp->tr("window"); break;
+    default: name.clear(); break;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void Toy::SetDefaultWindowIcon(QWidget &w)
 {
-	// NOTE: looks cleaner without window icons on Mac
+  // NOTE: looks cleaner without window icons on Mac
 
 #ifdef WIN32
-	static QIcon *sIcon = 0;
-	if( !sIcon )
-	{
-		sIcon = new QIcon();
+  static QIcon *sIcon = 0;
+  if (!sIcon)
+  {
+    sIcon = new QIcon();
 
-		const int iconSizes[] = {512, 256, 128, 64, 32, 16};
-		const size_t numIcons = sizeof(iconSizes)/sizeof(iconSizes[0]);
-		for(size_t i=0; i<numIcons; i++)
-		{
-			HICON hIcon = static_cast<HICON>( LoadImage(GetModuleHandle(0),MAKEINTRESOURCE(IDI_ICON1),IMAGE_ICON,iconSizes[i],iconSizes[i],LR_LOADTRANSPARENT) );
-			if( hIcon )
-			{
-                sIcon->addPixmap(QPixmap::fromImage(QImage::fromHICON(hIcon)));
-				DestroyIcon(hIcon);
-			}
-		}
-	}
+    const int iconSizes[] = {512, 256, 128, 64, 32, 16};
+    const size_t numIcons = sizeof(iconSizes) / sizeof(iconSizes[0]);
+    for (size_t i = 0; i < numIcons; i++)
+    {
+      HICON hIcon = static_cast<HICON>(LoadImage(GetModuleHandle(0), MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, iconSizes[i], iconSizes[i], LR_LOADTRANSPARENT));
+      if (hIcon)
+      {
+        sIcon->addPixmap(QPixmap::fromImage(QImage::fromHICON(hIcon)));
+        DestroyIcon(hIcon);
+      }
+    }
+  }
 
-	if( !sIcon->isNull() )
-		w.setWindowIcon( *sIcon );
+  if (!sIcon->isNull())
+    w.setWindowIcon(*sIcon);
 #endif
 }
 
@@ -176,159 +174,151 @@ void Toy::SetDefaultWindowIcon(QWidget &w)
 
 void Toy::SnapToEdges()
 {
-	SnapToScreen(*this, SNAP_TO_EDGE_PIX);
+  SnapToScreen(*this, SNAP_TO_EDGE_PIX);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void Toy::SnapToScreen(QWidget &w, int threshold)
 {
-	Qt::WindowStates ws = w.windowState();
-	if(!ws.testFlag(Qt::WindowMinimized) && !ws.testFlag(Qt::WindowMaximized))
-	{
-		QRect fr( w.frameGeometry() );
-		QSize frameSize(fr.size() - w.size());
-        QScreen *screen = qApp->screenAt(fr.center());
-		if (screen)
-		{
-			QRect dr(screen->availableGeometry());
-			if(!fr.isEmpty() && !dr.isEmpty())
-			{
-				// top/bottom snap
-				if(qAbs(fr.top()-dr.top()) <= threshold)
-				{
-					if(qAbs(fr.bottom()-dr.bottom()) <= threshold)
-						fr.setHeight( dr.height() );	// snap to both
+  Qt::WindowStates ws = w.windowState();
+  if (!ws.testFlag(Qt::WindowMinimized) && !ws.testFlag(Qt::WindowMaximized))
+  {
+    QRect fr(w.frameGeometry());
+    QSize frameSize(fr.size() - w.size());
+    QScreen *screen = qApp->screenAt(fr.center());
+    if (screen)
+    {
+      QRect dr(screen->availableGeometry());
+      if (!fr.isEmpty() && !dr.isEmpty())
+      {
+        // top/bottom snap
+        if (qAbs(fr.top() - dr.top()) <= threshold)
+        {
+          if (qAbs(fr.bottom() - dr.bottom()) <= threshold)
+            fr.setHeight(dr.height());  // snap to both
 
-					fr.moveTo(fr.x(), dr.top());
-				}
-				else if(qAbs(fr.bottom()-dr.bottom()) <= threshold)
-					fr.moveTo(fr.x(), dr.bottom()-fr.height()+1);
+          fr.moveTo(fr.x(), dr.top());
+        }
+        else if (qAbs(fr.bottom() - dr.bottom()) <= threshold)
+          fr.moveTo(fr.x(), dr.bottom() - fr.height() + 1);
 
-				// left/right snap
-				if(qAbs(fr.left()-dr.left()) <= threshold)
-				{
-					if(qAbs(fr.right()-dr.right()) <= threshold)
-						fr.setWidth( dr.width() );	// snap to both
+        // left/right snap
+        if (qAbs(fr.left() - dr.left()) <= threshold)
+        {
+          if (qAbs(fr.right() - dr.right()) <= threshold)
+            fr.setWidth(dr.width());  // snap to both
 
-					fr.moveTo(dr.left(), fr.y());
-				}
-				else if(qAbs(fr.right()-dr.right()) <= threshold)
-					fr.moveTo(dr.right()-fr.width()+1, fr.y());
+          fr.moveTo(dr.left(), fr.y());
+        }
+        else if (qAbs(fr.right() - dr.right()) <= threshold)
+          fr.moveTo(dr.right() - fr.width() + 1, fr.y());
 
-				w.move( fr.topLeft() );
-				w.resize(fr.size() - frameSize);
-			}
-		}
-	}
+        w.move(fr.topLeft());
+        w.resize(fr.size() - frameSize);
+      }
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void Toy::ClipToScreen(QWidget &w)
 {
-	QRect fr( w.frameGeometry() );
-	QScreen *screen = qApp->screenAt(fr.center());
-    if (screen)
-	{
-		QRect dr( screen->availableGeometry() );
+  QRect fr(w.frameGeometry());
+  QScreen *screen = qApp->screenAt(fr.center());
+  if (screen)
+  {
+    QRect dr(screen->availableGeometry());
 
-		// top/bottom clip
-		if(fr.top() < dr.top())
-			fr.moveTo(fr.x(), dr.top());
-		else if(fr.bottom() > dr.bottom())
-			fr.moveTo(fr.x(), dr.bottom()-fr.height()+1);
+    // top/bottom clip
+    if (fr.top() < dr.top())
+      fr.moveTo(fr.x(), dr.top());
+    else if (fr.bottom() > dr.bottom())
+      fr.moveTo(fr.x(), dr.bottom() - fr.height() + 1);
 
-		// left/right clip
-		if(fr.left() < dr.left())
-			fr.moveTo(dr.left(), fr.y());
-		else if(fr.right() > dr.right())
-			fr.moveTo(dr.right()-fr.width()+1, fr.y());
+    // left/right clip
+    if (fr.left() < dr.left())
+      fr.moveTo(dr.left(), fr.y());
+    else if (fr.right() > dr.right())
+      fr.moveTo(dr.right() - fr.width() + 1, fr.y());
 
-		w.move( fr.topLeft() );
-	}
+    w.move(fr.topLeft());
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void Toy::ResourceRelativePathToAbsolute(EosLog *log, const QString &filePath, QString &resourcePath)
 {
-	if( !resourcePath.isEmpty() )
-	{
-		QFileInfo fi(resourcePath);
-		if( !fi.isAbsolute() )
-		{
-			QDir fileDir( QFileInfo(filePath).absoluteDir() );
-			resourcePath = QDir::cleanPath( fileDir.absoluteFilePath(resourcePath) );
-		}
-		
-		if( log )
-		{
-			if( QFileInfo(resourcePath).exists() )
-			{
-				QString msg = tr("Loaded resource \"%1\" @ \"%2\"")
-				.arg( QDir::toNativeSeparators(fi.filePath()) )
-				.arg( QDir::toNativeSeparators(resourcePath) );
-				log->AddDebug( msg.toUtf8().constData() );
-			}
-			else
-			{
-				QString msg = tr("Missing resource \"%1\" @ \"%2\"")
-				.arg( QDir::toNativeSeparators(fi.filePath()) )
-				.arg( QDir::toNativeSeparators(resourcePath) );
-				log->AddError( msg.toUtf8().constData() );
-			}
-		}
-	}
+  if (!resourcePath.isEmpty())
+  {
+    QFileInfo fi(resourcePath);
+    if (!fi.isAbsolute())
+    {
+      QDir fileDir(QFileInfo(filePath).absoluteDir());
+      resourcePath = QDir::cleanPath(fileDir.absoluteFilePath(resourcePath));
+    }
+
+    if (log)
+    {
+      if (QFileInfo(resourcePath).exists())
+      {
+        QString msg = tr("Loaded resource \"%1\" @ \"%2\"").arg(QDir::toNativeSeparators(fi.filePath())).arg(QDir::toNativeSeparators(resourcePath));
+        log->AddDebug(msg.toUtf8().constData());
+      }
+      else
+      {
+        QString msg = tr("Missing resource \"%1\" @ \"%2\"").arg(QDir::toNativeSeparators(fi.filePath())).arg(QDir::toNativeSeparators(resourcePath));
+        log->AddError(msg.toUtf8().constData());
+      }
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void Toy::ResourceAbsolutePathToRelative(EosLog *log, const QString &filePath, QString &resourcePath)
 {
-	if( !resourcePath.isEmpty() )
-	{
-		QFileInfo fi(resourcePath);
-		if( fi.isAbsolute() )
-		{
-			QDir fileDir( QFileInfo(filePath).absoluteDir() );
-			resourcePath = QDir::cleanPath( fileDir.relativeFilePath(fi.absoluteFilePath()) );
-		}
-		
-		if( log )
-		{
-			QString sanityCheck(resourcePath);
-			Toy::ResourceRelativePathToAbsolute(/*log*/0, filePath, sanityCheck);
-			
-			if( QFileInfo(sanityCheck).isFile() )
-			{
-				QString msg = tr("Saved resource \"%1\" @ \"%2\"")
-				.arg( QDir::toNativeSeparators(fi.filePath()) )
-				.arg( QDir::toNativeSeparators(resourcePath) );
-				log->AddDebug( msg.toUtf8().constData() );
-			}
-			else
-			{
-				QString msg = tr("Failed to save resource \"%1\" @ \"%2\"")
-				.arg( QDir::toNativeSeparators(fi.filePath()) )
-				.arg( QDir::toNativeSeparators(resourcePath) );
-				log->AddError( msg.toUtf8().constData() );
-			}
-		}
-	}
+  if (!resourcePath.isEmpty())
+  {
+    QFileInfo fi(resourcePath);
+    if (fi.isAbsolute())
+    {
+      QDir fileDir(QFileInfo(filePath).absoluteDir());
+      resourcePath = QDir::cleanPath(fileDir.relativeFilePath(fi.absoluteFilePath()));
+    }
+
+    if (log)
+    {
+      QString sanityCheck(resourcePath);
+      Toy::ResourceRelativePathToAbsolute(/*log*/ 0, filePath, sanityCheck);
+
+      if (QFileInfo(sanityCheck).isFile())
+      {
+        QString msg = tr("Saved resource \"%1\" @ \"%2\"").arg(QDir::toNativeSeparators(fi.filePath())).arg(QDir::toNativeSeparators(resourcePath));
+        log->AddDebug(msg.toUtf8().constData());
+      }
+      else
+      {
+        QString msg = tr("Failed to save resource \"%1\" @ \"%2\"").arg(QDir::toNativeSeparators(fi.filePath())).arg(QDir::toNativeSeparators(resourcePath));
+        log->AddError(msg.toUtf8().constData());
+      }
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void Toy::RestoreDefaultSettings()
 {
-	sm_EncoderRadiansPerTick = 0.034906585f;	// 2 degrees
-	sm_FeedbackDelayMS = 3000;
-	sm_CmdSendAllDelayMS = 500;
-	sm_MetroRefreshRateMS = 10;
-	sm_SineRefreshRateMS = 10;
-	sm_PedalRefreshRateMS = 10;
-	sm_FlickerRefreshRateMS = 10;
+  sm_EncoderRadiansPerTick = 0.034906585f;  // 2 degrees
+  sm_FeedbackDelayMS = 3000;
+  sm_CmdSendAllDelayMS = 500;
+  sm_MetroRefreshRateMS = 10;
+  sm_SineRefreshRateMS = 10;
+  sm_PedalRefreshRateMS = 10;
+  sm_FlickerRefreshRateMS = 10;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

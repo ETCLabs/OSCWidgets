@@ -25,9 +25,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void* Bridge_CreatePlatform(std::string &error);
+void *Bridge_CreatePlatform(std::string &error);
 void Bridge_DestroyPlatform(void *platform);
-void* Bridge_BeginActivity(const std::string &reason, std::string &error);
+void *Bridge_BeginActivity(const std::string &reason, std::string &error);
 void Bridge_EndActivity(void *activity);
 void Bridge_InitQtPlugins();
 

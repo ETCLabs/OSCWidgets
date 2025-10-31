@@ -38,63 +38,62 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class Toys
-	: public QObject
+class Toys : public QObject
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	typedef std::vector<Toy*> TOY_LIST;
-	
-	Toys(Toy::Client *pClient, QWidget *pParent);
-	
-	virtual void Clear();
-	virtual Toy* AddToy(Toy::EnumToyType type);
-	const TOY_LIST& GetList() const {return m_List;}
-	virtual bool GetFramesEnabled() const {return m_FramesEnabled;}
-	virtual void SetFramesEnabled(bool b);
-	virtual bool GetTopMost() const {return m_TopMost;}
-	virtual void SetTopMost(bool b);
-	virtual void SnapToEdges();
-	virtual int GetOpacity() const {return m_Opacity;}
-	virtual void SetOpacity(int opacity);
-	virtual void ClearLabels();
-	virtual void Recv(char *data, size_t len);
-	virtual bool Save(EosLog &log, const QString &path, QStringList &lines);
-	virtual bool Load(EosLog &log, const QString &path, QStringList &lines, int &index);
-	virtual void ActivateToy(size_t index);
-	virtual void ActivateToys(Toy::EnumToyType toyType);
-	virtual void ActivateAllToys(bool b);
-	virtual bool HasVisibleToys() const;
-	virtual void DeleteToy(size_t index);
-	virtual void RefreshAdvancedSettings();
-	virtual void Connected();
-	virtual void Disconnected();
+  typedef std::vector<Toy *> TOY_LIST;
+
+  Toys(Toy::Client *pClient, QWidget *pParent);
+
+  virtual void Clear();
+  virtual Toy *AddToy(Toy::EnumToyType type);
+  const TOY_LIST &GetList() const { return m_List; }
+  virtual bool GetFramesEnabled() const { return m_FramesEnabled; }
+  virtual void SetFramesEnabled(bool b);
+  virtual bool GetTopMost() const { return m_TopMost; }
+  virtual void SetTopMost(bool b);
+  virtual void SnapToEdges();
+  virtual int GetOpacity() const { return m_Opacity; }
+  virtual void SetOpacity(int opacity);
+  virtual void ClearLabels();
+  virtual void Recv(char *data, size_t len);
+  virtual bool Save(EosLog &log, const QString &path, QStringList &lines);
+  virtual bool Load(EosLog &log, const QString &path, QStringList &lines, int &index);
+  virtual void ActivateToy(size_t index);
+  virtual void ActivateToys(Toy::EnumToyType toyType);
+  virtual void ActivateAllToys(bool b);
+  virtual bool HasVisibleToys() const;
+  virtual void DeleteToy(size_t index);
+  virtual void RefreshAdvancedSettings();
+  virtual void Connected();
+  virtual void Disconnected();
 
 signals:
-	void changed();
-	void toggleMainWindow();
-	
+  void changed();
+  void toggleMainWindow();
+
 private slots:
-	void onRecvWidgetsChanged();
-	void onToyClosing(Toy *toy);
-	void onToyChanged();
-	void onToyToggledMainWindow();
-	
+  void onRecvWidgetsChanged();
+  void onToyClosing(Toy *toy);
+  void onToyChanged();
+  void onToyToggledMainWindow();
+
 protected:
-	Toy::Client			*m_pClient;
-	QWidget				*m_pParent;
-	TOY_LIST			m_List;
-	bool				m_FramesEnabled;
-	bool				m_TopMost;
-	int					m_Opacity;
-	Toy::RECV_WIDGETS	m_RecvWidgets;
-	Toy::RECV_WIDGETS	m_WildcardRecvWidgets;
-	bool				m_Loading;
-	
-	virtual void BuildRecvWidgetsTable();
-	virtual Qt::WindowFlags GetWindowFlags() const;
-	virtual void UpdateWindowFlags();
+  Toy::Client *m_pClient;
+  QWidget *m_pParent;
+  TOY_LIST m_List;
+  bool m_FramesEnabled;
+  bool m_TopMost;
+  int m_Opacity;
+  Toy::RECV_WIDGETS m_RecvWidgets;
+  Toy::RECV_WIDGETS m_WildcardRecvWidgets;
+  bool m_Loading;
+
+  virtual void BuildRecvWidgetsTable();
+  virtual Qt::WindowFlags GetWindowFlags() const;
+  virtual void UpdateWindowFlags();
 };
 
 ////////////////////////////////////////////////////////////////////////////////

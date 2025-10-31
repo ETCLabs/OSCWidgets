@@ -28,116 +28,113 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class FadeFlicker
-	: public FadeButton
+class FadeFlicker : public FadeButton
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	FadeFlicker(QWidget *parent);
+  FadeFlicker(QWidget *parent);
 
-	virtual void SetText(const QString &text);
-	virtual void SetLabel(const QString &label);
-	virtual void Update(unsigned int ms);
-	virtual void SetTimeScaleRange(float minTimeScale, float maxTimeScale);
-	virtual bool HasTimeScale() const;
-	virtual float GetBPM() const {return m_BPM;}
-	virtual void SetBPM(float bpm);
-	virtual bool GetPaused() const {return m_Paused;}
-	virtual void SetPaused(bool b);
-	
-	static unsigned int GetMsPerBeat(float bpm, float timeScale);
+  virtual void SetText(const QString &text);
+  virtual void SetLabel(const QString &label);
+  virtual void Update(unsigned int ms);
+  virtual void SetTimeScaleRange(float minTimeScale, float maxTimeScale);
+  virtual bool HasTimeScale() const;
+  virtual float GetBPM() const { return m_BPM; }
+  virtual void SetBPM(float bpm);
+  virtual bool GetPaused() const { return m_Paused; }
+  virtual void SetPaused(bool b);
+
+  static unsigned int GetMsPerBeat(float bpm, float timeScale);
 
 signals:
-	void valueChanged(float value);
+  void valueChanged(float value);
 
 private slots:
-	void onClicked(bool checked);
+  void onClicked(bool checked);
 
 protected:
-	int				m_TextMargin;
-	int				m_LabelMargin;
-	float			m_Value;
-	float			m_MinTimeScale;
-	float			m_MaxTimeScale;
-	float			m_BPM;
-	unsigned int	m_MsPerBeat;
-	unsigned int	m_Elapsed;
-	QRect			m_FlickerRect;
-	bool			m_Paused;
+  int m_TextMargin;
+  int m_LabelMargin;
+  float m_Value;
+  float m_MinTimeScale;
+  float m_MaxTimeScale;
+  float m_BPM;
+  unsigned int m_MsPerBeat;
+  unsigned int m_Elapsed;
+  QRect m_FlickerRect;
+  bool m_Paused;
 
-	virtual void UpdateFlickerRect();
-	virtual void AutoSizeFont();
-	virtual void UpdateMargins();
-	virtual void UpdateMsPerBeat();
-	virtual void resizeEvent(QResizeEvent *event);
-	virtual void paintEvent(QPaintEvent *event);
+  virtual void UpdateFlickerRect();
+  virtual void AutoSizeFont();
+  virtual void UpdateMargins();
+  virtual void UpdateMsPerBeat();
+  virtual void resizeEvent(QResizeEvent *event);
+  virtual void paintEvent(QPaintEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToyFlickerWidget
-	: public ToyWidget
+class ToyFlickerWidget : public ToyWidget
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	ToyFlickerWidget(QWidget *parent);
-	
-	virtual void SetText(const QString &text);
-	virtual void SetImagePath(const QString &imagePath);
-	virtual void SetColor(const QColor &color);
-	virtual void SetTextColor(const QColor &textColor);
-	virtual bool HasTriggerPath() const {return true;}
-	virtual bool HasMinMax2() const {return true;}
-	virtual void SetMin2(const QString &n);
-	virtual void SetMax2(const QString &n);
-	virtual void SetBPM(const QString &bpm);
-	virtual bool HasBPM() const {return true;}
-	virtual void SetLabel(const QString &label);
-	virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
-	virtual void Update(unsigned int ms);
-	virtual FadeFlicker& GetFlicker() {return *static_cast<FadeFlicker*>(m_Widget);}
-	
+  ToyFlickerWidget(QWidget *parent);
+
+  virtual void SetText(const QString &text);
+  virtual void SetImagePath(const QString &imagePath);
+  virtual void SetColor(const QColor &color);
+  virtual void SetTextColor(const QColor &textColor);
+  virtual bool HasTriggerPath() const { return true; }
+  virtual bool HasMinMax2() const { return true; }
+  virtual void SetMin2(const QString &n);
+  virtual void SetMax2(const QString &n);
+  virtual void SetBPM(const QString &bpm);
+  virtual bool HasBPM() const { return true; }
+  virtual void SetLabel(const QString &label);
+  virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
+  virtual void Update(unsigned int ms);
+  virtual FadeFlicker &GetFlicker() { return *static_cast<FadeFlicker *>(m_Widget); }
+
 signals:
-	void valueChanged(ToyFlickerWidget*, float value);
+  void valueChanged(ToyFlickerWidget *, float value);
 
 private slots:
-	void onValueChanged(float value);
+  void onValueChanged(float value);
 
 protected:
-	virtual void UpdateTimeScaleRange();
+  virtual void UpdateTimeScaleRange();
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToyFlickerGrid
-	: public ToyGrid
+class ToyFlickerGrid : public ToyGrid
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	ToyFlickerGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);	
+  ToyFlickerGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
 
-	virtual void StartTimer();
-	virtual void StopTimer();
-	
+  virtual void StartTimer();
+  virtual void StopTimer();
+
 private slots:
-	void onValueChanged(ToyFlickerWidget*, float value);
-	void onTimeout();
-	void onPlayClicked(bool checked);
-	void onPauseClicked(bool checked);
-	
-protected:
-	QTimer		*m_Timer;
-	EosTimer	m_ElapsedTimer;
-	FadeButton	*m_Play;
-	FadeButton	*m_Pause;
+  void onValueChanged(ToyFlickerWidget *, float value);
+  void onTimeout();
+  void onPlayClicked(bool checked);
+  void onPauseClicked(bool checked);
 
-	virtual ToyWidget* CreateWidget();
-	virtual QSize GetDefaultWidgetSize() const {return QSize(80,120);}
-	virtual void UpdateLayout();
-	virtual void AutoSize(const QSize &widgetSize);
+protected:
+  QTimer *m_Timer;
+  EosTimer m_ElapsedTimer;
+  FadeButton *m_Play;
+  FadeButton *m_Pause;
+
+  virtual ToyWidget *CreateWidget();
+  virtual QSize GetDefaultWidgetSize() const { return QSize(80, 120); }
+  virtual void UpdateLayout();
+  virtual void AutoSize(const QSize &widgetSize);
 };
 
 ////////////////////////////////////////////////////////////////////////////////

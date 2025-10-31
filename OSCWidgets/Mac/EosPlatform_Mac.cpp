@@ -24,8 +24,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 EosPlatform_Mac::EosPlatform_Mac()
-	: m_Platform(0)
-	, m_Activity(0)
+  : m_Platform(0)
+  , m_Activity(0)
 {
 }
 
@@ -33,63 +33,63 @@ EosPlatform_Mac::EosPlatform_Mac()
 
 EosPlatform_Mac::~EosPlatform_Mac()
 {
-	Shutdown();
+  Shutdown();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 bool EosPlatform_Mac::Initialize(std::string &error)
 {
-	if(m_Platform == 0)
-    {
-		m_Platform = Bridge_CreatePlatform(error);
-        Bridge_InitQtPlugins();
-    }
-	
-	return (m_Platform != 0);
+  if (m_Platform == 0)
+  {
+    m_Platform = Bridge_CreatePlatform(error);
+    Bridge_InitQtPlugins();
+  }
+
+  return (m_Platform != 0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void EosPlatform_Mac::Shutdown()
 {
-	if( m_Platform )
-	{
-		std::string dummy;
-		SetSystemIdleAllowed(true, "shutdown", dummy);
-		Bridge_DestroyPlatform(m_Platform);
-		m_Platform = 0;
-	}
+  if (m_Platform)
+  {
+    std::string dummy;
+    SetSystemIdleAllowed(true, "shutdown", dummy);
+    Bridge_DestroyPlatform(m_Platform);
+    m_Platform = 0;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 bool EosPlatform_Mac::SetSystemIdleAllowed(bool b, const std::string &reason, std::string &error)
 {
-	if( m_Platform )
-	{
-		if( b )
-		{
-			if( m_Activity )
-			{
-				Bridge_EndActivity(m_Activity);
-				m_Activity = 0;
-			}
-		}
-		else if( !m_Activity )
-		{
-			m_Activity = Bridge_BeginActivity(reason, error);
-			if( !m_Activity )
-				return false;
-		}
-	}
-	else
-	{
-		error = "invalid platform";
-		return false;
-	}
-	
-	return true;
+  if (m_Platform)
+  {
+    if (b)
+    {
+      if (m_Activity)
+      {
+        Bridge_EndActivity(m_Activity);
+        m_Activity = 0;
+      }
+    }
+    else if (!m_Activity)
+    {
+      m_Activity = Bridge_BeginActivity(reason, error);
+      if (!m_Activity)
+        return false;
+    }
+  }
+  else
+  {
+    error = "invalid platform";
+    return false;
+  }
+
+  return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

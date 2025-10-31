@@ -28,19 +28,18 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class EosPlatform_Mac
-	: public EosPlatform
+class EosPlatform_Mac : public EosPlatform
 {
 public:
-	EosPlatform_Mac();
-	virtual ~EosPlatform_Mac();
-	virtual bool Initialize(std::string &error);
-	virtual void Shutdown();
-	virtual bool SetSystemIdleAllowed(bool b, const std::string &reason, std::string &error);
-	
+  EosPlatform_Mac();
+  virtual ~EosPlatform_Mac();
+  virtual bool Initialize(std::string &error);
+  virtual void Shutdown();
+  virtual bool SetSystemIdleAllowed(bool b, const std::string &reason, std::string &error);
+
 private:
-	void	*m_Platform;
-	void	*m_Activity;
+  void *m_Platform;
+  void *m_Activity;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

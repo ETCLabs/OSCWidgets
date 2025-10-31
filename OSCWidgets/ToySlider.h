@@ -28,100 +28,97 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class FadeSlider
-	: public FadeButton
+class FadeSlider : public FadeButton
 {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	FadeSlider(QWidget *parent);
+  FadeSlider(QWidget *parent);
 
-	virtual void SetText(const QString &text);
-	virtual void SetLabel(const QString &label);
-	virtual void SetPercent(float percent);
-	virtual void RecvPercent(float percent);
-	virtual void TriggerPercent(float percent);
-	virtual float GetPercent() const {return m_Percent;}
-	virtual bool GetMouseDown() const {return m_MouseDown;}
+  virtual void SetText(const QString &text);
+  virtual void SetLabel(const QString &label);
+  virtual void SetPercent(float percent);
+  virtual void RecvPercent(float percent);
+  virtual void TriggerPercent(float percent);
+  virtual float GetPercent() const { return m_Percent; }
+  virtual bool GetMouseDown() const { return m_MouseDown; }
 
 signals:
-	void percentChanged(float percent);
+  void percentChanged(float percent);
 
 private slots:
-	void onRecvTimeout();
+  void onRecvTimeout();
 
 protected:
-	struct sRecvPercent
-	{
-		bool	pending;
-		float	percent;
-		QTimer	*timer;
-	};
+  struct sRecvPercent
+  {
+    bool pending;
+    float percent;
+    QTimer *timer;
+  };
 
-	float			m_Percent;
-	sRecvPercent	m_RecvPercent;
-	bool			m_MouseDown;
-	int				m_TextMargin;
-	int				m_LabelMargin;
-	QImage			m_Canvas;
+  float m_Percent;
+  sRecvPercent m_RecvPercent;
+  bool m_MouseDown;
+  int m_TextMargin;
+  int m_LabelMargin;
+  QImage m_Canvas;
 
-	virtual void UpdateMargins();
-	virtual void AutoSizeFont();
-	virtual void SetPercentPrivate(float percent, bool user);
-	virtual int PercentToPos(float percent);
-	virtual float PosToPercent(int pos);
-	virtual void resizeEvent(QResizeEvent *event);
-	virtual void mousePressEvent(QMouseEvent *event);
-	virtual void mouseMoveEvent(QMouseEvent *event);
-	virtual void mouseReleaseEvent(QMouseEvent *event);
-	virtual void paintEvent(QPaintEvent *event);
+  virtual void UpdateMargins();
+  virtual void AutoSizeFont();
+  virtual void SetPercentPrivate(float percent, bool user);
+  virtual int PercentToPos(float percent);
+  virtual float PosToPercent(int pos);
+  virtual void resizeEvent(QResizeEvent *event);
+  virtual void mousePressEvent(QMouseEvent *event);
+  virtual void mouseMoveEvent(QMouseEvent *event);
+  virtual void mouseReleaseEvent(QMouseEvent *event);
+  virtual void paintEvent(QPaintEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToySliderWidget
-	: public ToyWidget
+class ToySliderWidget : public ToyWidget
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	ToySliderWidget(QWidget *parent);
-	
-	virtual float GetPercent() const;
-	virtual void SetText(const QString &text);
-	virtual void SetImagePath(const QString &imagePath);
-	virtual void SetColor(const QColor &color);
-	virtual void SetTextColor(const QColor &textColor);
-	virtual bool HasFeedbackPath() const {return true;}
-	virtual bool HasTriggerPath() const {return true;}
-	virtual void SetLabel(const QString &label);
-	virtual void Recv(const QString &path, const OSCArgument *args, size_t count);	
-	
+  ToySliderWidget(QWidget *parent);
+
+  virtual float GetPercent() const;
+  virtual void SetText(const QString &text);
+  virtual void SetImagePath(const QString &imagePath);
+  virtual void SetColor(const QColor &color);
+  virtual void SetTextColor(const QColor &textColor);
+  virtual bool HasFeedbackPath() const { return true; }
+  virtual bool HasTriggerPath() const { return true; }
+  virtual void SetLabel(const QString &label);
+  virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
+
 signals:
-	void percentChanged(ToySliderWidget*);
+  void percentChanged(ToySliderWidget *);
 
 private slots:
-	void onPercentChanged(float percent);
+  void onPercentChanged(float percent);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToySliderGrid
-	: public ToyGrid
+class ToySliderGrid : public ToyGrid
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	ToySliderGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
-	
-	virtual void GetDefaultGridSize(QSize &gridSize) const {gridSize = QSize(5,1);}
-	
+  ToySliderGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
+
+  virtual void GetDefaultGridSize(QSize &gridSize) const { gridSize = QSize(5, 1); }
+
 private slots:
-	void onPercentChanged(ToySliderWidget*);
-	
+  void onPercentChanged(ToySliderWidget *);
+
 protected:
-	virtual ToyWidget* CreateWidget();
-	virtual QSize GetDefaultWidgetSize() const {return QSize(60,250);}
+  virtual ToyWidget *CreateWidget();
+  virtual QSize GetDefaultWidgetSize() const { return QSize(60, 250); }
 };
 
 ////////////////////////////////////////////////////////////////////////////////

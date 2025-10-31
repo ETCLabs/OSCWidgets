@@ -22,15 +22,15 @@
 #include "OSCParser.h"
 #include "Utils.h"
 
-#define ENCODER_SPAN	45
+#define ENCODER_SPAN 45
 
 ////////////////////////////////////////////////////////////////////////////////
 
 FadeEncoder::FadeEncoder(QWidget *parent)
-	: FadeButton(parent)
-	, m_MouseDown(false)
-	, m_TextMargin(0)
-	, m_LabelMargin(0)
+  : FadeButton(parent)
+  , m_MouseDown(false)
+  , m_TextMargin(0)
+  , m_LabelMargin(0)
 {
 }
 
@@ -38,424 +38,416 @@ FadeEncoder::FadeEncoder(QWidget *parent)
 
 void FadeEncoder::SetText(const QString &text)
 {
-	if(this->text() != text)
-	{
-		setText(text);
-		UpdateMargins();
-		update();
-	}
+  if (this->text() != text)
+  {
+    setText(text);
+    UpdateMargins();
+    update();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void FadeEncoder::SetLabel(const QString &label)
 {
-	if(m_Label != label)
-	{
-		m_Label = label;
-		UpdateMargins();
-		update();
-	}
+  if (m_Label != label)
+  {
+    m_Label = label;
+    UpdateMargins();
+    update();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 float FadeEncoder::PosToRadians(const sPosF &pos) const
 {
-	float w = width();
-	float h = (height() - m_TextMargin - m_LabelMargin);
-	if(w>0 && h>0)
-	{
-		float x = (2.0f*(pos.x/w) - 1.0f);
-		float y = (2.0f*(1.0f - (pos.y-m_TextMargin)/h) - 1.0f);
-		float radians = atan2(y, x);
-		if(radians < 0)
-			radians += static_cast<float>(TWO_PI);
-		return radians;
-	}
+  float w = width();
+  float h = (height() - m_TextMargin - m_LabelMargin);
+  if (w > 0 && h > 0)
+  {
+    float x = (2.0f * (pos.x / w) - 1.0f);
+    float y = (2.0f * (1.0f - (pos.y - m_TextMargin) / h) - 1.0f);
+    float radians = atan2(y, x);
+    if (radians < 0)
+      radians += static_cast<float>(TWO_PI);
+    return radians;
+  }
 
-	return 0;
+  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 float FadeEncoder::GetTickRadians(const sPosF &a, const sPosF &b) const
 {
-	float delta = (PosToRadians(a) - PosToRadians(b));
-	if(delta > M_PI)
-		delta -= (2.0f * static_cast<float>(M_PI));
-	else if(delta < -M_PI)
-		delta += (2.0f * static_cast<float>(M_PI));
-	return delta;
+  float delta = (PosToRadians(a) - PosToRadians(b));
+  if (delta > M_PI)
+    delta -= (2.0f * static_cast<float>(M_PI));
+  else if (delta < -M_PI)
+    delta += (2.0f * static_cast<float>(M_PI));
+  return delta;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void FadeEncoder::AutoSizeFont()
 {
-	QFont fnt( font() );
-	int d = qMin(width(), qMax(m_TextMargin,m_LabelMargin));
-	fnt.setPixelSize( qMax(10,qRound(d*0.333)) );
-	setFont(fnt);
+  QFont fnt(font());
+  int d = qMin(width(), qMax(m_TextMargin, m_LabelMargin));
+  fnt.setPixelSize(qMax(10, qRound(d * 0.333)));
+  setFont(fnt);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void FadeEncoder::UpdateMargins()
 {
-	int textMargin = (text().isEmpty() ? 0 : qRound(height()*0.1));
-	int labelMargin = (m_Label.isEmpty() ? 0 : qRound(height()*0.1));
+  int textMargin = (text().isEmpty() ? 0 : qRound(height() * 0.1));
+  int labelMargin = (m_Label.isEmpty() ? 0 : qRound(height() * 0.1));
 
-	if(m_TextMargin!=textMargin || m_LabelMargin!=labelMargin)
-	{
-		m_TextMargin = textMargin;
-		m_LabelMargin = labelMargin;
-		update();
-	}
+  if (m_TextMargin != textMargin || m_LabelMargin != labelMargin)
+  {
+    m_TextMargin = textMargin;
+    m_LabelMargin = labelMargin;
+    update();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void FadeEncoder::Tick(int tickCount)
 {
-	if(tickCount != 0)
-	{
-		float delta = ((tickCount > 0)
-			? (Toy::GetEncoderRadiansPerTick() * 1.00001f)
-			: (Toy::GetEncoderRadiansPerTick() * -1.00001f) );
+  if (tickCount != 0)
+  {
+    float delta = ((tickCount > 0) ? (Toy::GetEncoderRadiansPerTick() * 1.00001f) : (Toy::GetEncoderRadiansPerTick() * -1.00001f));
 
-		float radians = PosToRadians(m_MousePos);
+    float radians = PosToRadians(m_MousePos);
 
-		Press();
+    Press();
 
-		int count = abs(tickCount);
-		for(int i=0; i<count; i++)
-		{
-			radians -= delta;
-			emit tick(delta);
-		}
+    int count = abs(tickCount);
+    for (int i = 0; i < count; i++)
+    {
+      radians -= delta;
+      emit tick(delta);
+    }
 
-		Release();
+    Release();
 
-		float x = cosf(radians);
-		float y = sinf(radians);
+    float x = cosf(radians);
+    float y = sinf(radians);
 
-		float h = (height() - m_TextMargin - m_LabelMargin);
-		m_MousePos.x = ((x+1)*0.5f * width());
-		m_MousePos.y = (m_TextMargin + ((1.0f-(y+1)*0.5f))*h);
-	}
+    float h = (height() - m_TextMargin - m_LabelMargin);
+    m_MousePos.x = ((x + 1) * 0.5f * width());
+    m_MousePos.y = (m_TextMargin + ((1.0f - (y + 1) * 0.5f)) * h);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void FadeEncoder::resizeEvent(QResizeEvent *event)
 {
-	m_Canvas = QImage(size(), QImage::Format_ARGB32);
-	UpdateMargins();
-	FadeButton::resizeEvent(event);
+  m_Canvas = QImage(size(), QImage::Format_ARGB32);
+  UpdateMargins();
+  FadeButton::resizeEvent(event);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void FadeEncoder::mousePressEvent(QMouseEvent *event)
 {
-	FadeButton::mousePressEvent(event);
-	if(event->button() != Qt::RightButton)
-	{
-		m_MouseDown = true;
-		m_MousePos = event->pos();
-		update();
-	}
+  FadeButton::mousePressEvent(event);
+  if (event->button() != Qt::RightButton)
+  {
+    m_MouseDown = true;
+    m_MousePos = event->pos();
+    update();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void FadeEncoder::mouseMoveEvent(QMouseEvent *event)
 {
-	FadeButton::mouseMoveEvent(event);
-	if( m_MouseDown )
-	{
-		float radians = GetTickRadians(m_MousePos, event->pos());
-		if(fabsf(radians) >= Toy::GetEncoderRadiansPerTick())
-		{
-			emit tick(radians);
-			m_MousePos = event->pos();
-		}
-		update();
-	}
+  FadeButton::mouseMoveEvent(event);
+  if (m_MouseDown)
+  {
+    float radians = GetTickRadians(m_MousePos, event->pos());
+    if (fabsf(radians) >= Toy::GetEncoderRadiansPerTick())
+    {
+      emit tick(radians);
+      m_MousePos = event->pos();
+    }
+    update();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void FadeEncoder::mouseReleaseEvent(QMouseEvent *event)
 {
-	FadeButton::mouseReleaseEvent(event);
-	m_MouseDown = false;
-	update();
+  FadeButton::mouseReleaseEvent(event);
+  m_MouseDown = false;
+  update();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void FadeEncoder::paintEvent(QPaintEvent* /*event*/)
+void FadeEncoder::paintEvent(QPaintEvent * /*event*/)
 {
-	m_Canvas.fill(0);
+  m_Canvas.fill(0);
 
-	QPainter painter;
-	if( painter.begin(&m_Canvas) )
-	{
-		painter.setRenderHints(QPainter::Antialiasing|QPainter::TextAntialiasing);
-	
-		float brightness = m_Click;
-		if(m_Hover > 0)
-			brightness += (m_Hover*0.2f);
+  QPainter painter;
+  if (painter.begin(&m_Canvas))
+  {
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-		QColor color( palette().color(QPalette::Button) );
-		if(brightness > 0)
-		{
-			qreal t = (brightness * BUTTON_BRIGHTESS);
-			color.setRedF( qMin(color.redF()+t,1.0) );
-			color.setGreenF( qMin(color.greenF()+t,1.0) );
-			color.setBlueF( qMin(color.blueF()+t,1.0) );
-		}
+    float brightness = m_Click;
+    if (m_Hover > 0)
+      brightness += (m_Hover * 0.2f);
 
-		QRect r( rect() );
+    QColor color(palette().color(QPalette::Button));
+    if (brightness > 0)
+    {
+      qreal t = (brightness * BUTTON_BRIGHTESS);
+      color.setRedF(qMin(color.redF() + t, 1.0));
+      color.setGreenF(qMin(color.greenF() + t, 1.0));
+      color.setBlueF(qMin(color.blueF() + t, 1.0));
+    }
 
-		r.adjust(1+HALF_BORDER, 1+HALF_BORDER+m_TextMargin, -1-HALF_BORDER, -1-HALF_BORDER-m_LabelMargin);
-		
-		if(r.width() > r.height())
-		{
-            r.translate(qRound((double)r.width()-r.height())*0.5, 0);
-			r.setWidth( r.height() );
-		}
-		else if(r.height() > r.width())
-		{
-            r.translate(0, qRound((double)r.height()-r.width())*0.5);
-			r.setHeight( r.width() );
-		}
+    QRect r(rect());
 
-		int n = qRound(r.width() * 0.333);
-		QRect r2(	r.x() + qRound((r.width()-n)*0.5),
-					r.y() + qRound((r.height()-n)*0.5),
-					n, n);
+    r.adjust(1 + HALF_BORDER, 1 + HALF_BORDER + m_TextMargin, -1 - HALF_BORDER, -1 - HALF_BORDER - m_LabelMargin);
 
-		bool donutHole = false;
+    if (r.width() > r.height())
+    {
+      r.translate(qRound((double)r.width() - r.height()) * 0.5, 0);
+      r.setWidth(r.height());
+    }
+    else if (r.height() > r.width())
+    {
+      r.translate(0, qRound((double)r.height() - r.width()) * 0.5);
+      r.setHeight(r.width());
+    }
 
-		const QPixmap &pixmap = m_Images[m_ImageIndex].pixmap;
-		if( !pixmap.isNull() )
-		{
-			QPainterPath clip;
-			clip.addEllipse(r);
-			painter.setClipPath(clip);
-			painter.drawPixmap(	r.x() + qRound((r.width()-pixmap.width())*0.5),
-								r.y() + qRound((r.height()-pixmap.height())*0.5),
-								pixmap );
-			painter.setClipping(false);
-			donutHole = true;
-		}
+    int n = qRound(r.width() * 0.333);
+    QRect r2(r.x() + qRound((r.width() - n) * 0.5), r.y() + qRound((r.height() - n) * 0.5), n, n);
 
-		if(m_Click > 0)
-		{
-			painter.setPen(Qt::NoPen);
-			painter.setBrush(color);
-			float radians = PosToRadians(m_MousePos);
-			float degrees = (radians * (180/M_PI));
-			painter.setOpacity(m_Click);
-			painter.drawPie(r, qRound(degrees - ENCODER_SPAN*0.5)*16, ENCODER_SPAN*16);
-			painter.setOpacity(1.0);			
-			donutHole = true;
-		}
+    bool donutHole = false;
 
-		if( donutHole )
-		{
-			painter.setPen(Qt::NoPen);
-			painter.setBrush(Qt::white);
-			painter.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-			painter.drawEllipse(r2);
-			painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-		}
+    const QPixmap &pixmap = m_Images[m_ImageIndex].pixmap;
+    if (!pixmap.isNull())
+    {
+      QPainterPath clip;
+      clip.addEllipse(r);
+      painter.setClipPath(clip);
+      painter.drawPixmap(r.x() + qRound((r.width() - pixmap.width()) * 0.5), r.y() + qRound((r.height() - pixmap.height()) * 0.5), pixmap);
+      painter.setClipping(false);
+      donutHole = true;
+    }
 
-		painter.setBrush(Qt::NoBrush);
-		painter.setPen( QPen(color,BORDER) );
-		painter.drawEllipse(r);
-		painter.drawEllipse(r2);
+    if (m_Click > 0)
+    {
+      painter.setPen(Qt::NoPen);
+      painter.setBrush(color);
+      float radians = PosToRadians(m_MousePos);
+      float degrees = (radians * (180 / M_PI));
+      painter.setOpacity(m_Click);
+      painter.drawPie(r, qRound(degrees - ENCODER_SPAN * 0.5) * 16, ENCODER_SPAN * 16);
+      painter.setOpacity(1.0);
+      donutHole = true;
+    }
 
-		painter.end();
+    if (donutHole)
+    {
+      painter.setPen(Qt::NoPen);
+      painter.setBrush(Qt::white);
+      painter.setCompositionMode(QPainter::CompositionMode_DestinationOut);
+      painter.drawEllipse(r2);
+      painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    }
 
-		if( painter.begin(this) )
-		{
-			painter.drawImage(0, 0, m_Canvas);
-			
-			if( !text().isEmpty() )
-			{
-				int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen(color, BORDER));
+    painter.drawEllipse(r);
+    painter.drawEllipse(r2);
 
-				painter.setPen( palette().color(QPalette::ButtonText) );
-				painter.drawText(QRect(0,0,width(),r.y()-hoverRaise), Qt::AlignCenter|Qt::TextWordWrap|Qt::TextDontClip, text());
+    painter.end();
 
-				if( !m_Label.isEmpty() )
-					painter.drawText(QRect(0,r.bottom(),width(),height()-r.bottom()+hoverRaise), Qt::AlignCenter|Qt::TextWordWrap|Qt::TextDontClip, m_Label);
-			}
-			else if( !m_Label.isEmpty() )
-			{
-				int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
-				painter.setPen( palette().color(QPalette::ButtonText) );
-				painter.drawText(QRect(0,r.bottom(),width(),height()-r.bottom()+hoverRaise), Qt::AlignCenter|Qt::TextWordWrap|Qt::TextDontClip, m_Label);
-			}
-		
-			painter.end();
-		}
-	}
+    if (painter.begin(this))
+    {
+      painter.drawImage(0, 0, m_Canvas);
+
+      if (!text().isEmpty())
+      {
+        int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
+
+        painter.setPen(palette().color(QPalette::ButtonText));
+        painter.drawText(QRect(0, 0, width(), r.y() - hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, text());
+
+        if (!m_Label.isEmpty())
+          painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
+      }
+      else if (!m_Label.isEmpty())
+      {
+        int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
+        painter.setPen(palette().color(QPalette::ButtonText));
+        painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
+      }
+
+      painter.end();
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 ToyEncoderWidget::ToyEncoderWidget(QWidget *parent)
-	: ToyWidget(parent)
+  : ToyWidget(parent)
 {
-	m_HelpText = tr("Min = Counter-Clockwise Tick\nMax = Clockwise Tick\n\nOSC Trigger:\nNo Arguments = Single CW Tick\nArgument(X) = X CW Ticks\nArgument(-X) = X CCW Ticks");
+  m_HelpText = tr("Min = Counter-Clockwise Tick\nMax = Clockwise Tick\n\nOSC Trigger:\nNo Arguments = Single CW Tick\nArgument(X) = X CW Ticks\nArgument(-X) = X CCW Ticks");
 
-	m_Min = "-1";
-	m_Max = "1";
+  m_Min = "-1";
+  m_Max = "1";
 
-	m_Widget = new FadeEncoder(this);
-	connect(m_Widget, SIGNAL(tick(float)), this, SLOT(onTick(float)));
-	
-	QPalette pal( m_Widget->palette() );
-	m_Color = pal.color(QPalette::Button);
-	m_TextColor = pal.color(QPalette::ButtonText);
+  m_Widget = new FadeEncoder(this);
+  connect(m_Widget, SIGNAL(tick(float)), this, SLOT(onTick(float)));
+
+  QPalette pal(m_Widget->palette());
+  m_Color = pal.color(QPalette::Button);
+  m_TextColor = pal.color(QPalette::ButtonText);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ToyEncoderWidget::SetText(const QString &text)
 {
-	ToyWidget::SetText(text);
-	static_cast<FadeEncoder*>(m_Widget)->SetText(m_Text);
+  ToyWidget::SetText(text);
+  static_cast<FadeEncoder *>(m_Widget)->SetText(m_Text);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ToyEncoderWidget::SetImagePath(const QString &imagePath)
 {
-	ToyWidget::SetImagePath(imagePath);
-	static_cast<FadeEncoder*>(m_Widget)->SetImagePath(0, m_ImagePath);
+  ToyWidget::SetImagePath(imagePath);
+  static_cast<FadeEncoder *>(m_Widget)->SetImagePath(0, m_ImagePath);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ToyEncoderWidget::SetColor(const QColor &color)
 {
-	ToyWidget::SetColor(color);
-	QPalette pal( m_Widget->palette() );
-	pal.setColor(QPalette::Button, m_Color);
-	m_Widget->setPalette(pal);
+  ToyWidget::SetColor(color);
+  QPalette pal(m_Widget->palette());
+  pal.setColor(QPalette::Button, m_Color);
+  m_Widget->setPalette(pal);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ToyEncoderWidget::SetTextColor(const QColor &textColor)
 {
-	ToyWidget::SetTextColor(textColor);
-	QPalette pal( m_Widget->palette() );
-	pal.setColor(QPalette::ButtonText, m_TextColor);
-	m_Widget->setPalette(pal);
+  ToyWidget::SetTextColor(textColor);
+  QPalette pal(m_Widget->palette());
+  pal.setColor(QPalette::ButtonText, m_TextColor);
+  m_Widget->setPalette(pal);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ToyEncoderWidget::SetLabel(const QString &label)
 {
-	static_cast<FadeEncoder*>(m_Widget)->SetLabel(label);
+  static_cast<FadeEncoder *>(m_Widget)->SetLabel(label);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ToyEncoderWidget::Recv(const QString &path, const OSCArgument *args, size_t count)
 {
-	if(path == m_TriggerPath)
-	{
-		FadeEncoder *encoder = static_cast<FadeEncoder*>(m_Widget);
+  if (path == m_TriggerPath)
+  {
+    FadeEncoder *encoder = static_cast<FadeEncoder *>(m_Widget);
 
-		int tickCount = 1;
-		
-		if(args && count>0)
-		{
-			int n = 0;
-			if( args[0].GetInt(n) )
-				tickCount = n;
-		}
-		
-		encoder->Tick(tickCount);
-	}
-	else
-	{
-		std::string str;
-		if(args && count>0)
-		{
-			if( !args[0].GetString(str) )
-				str.clear();
-		}
+    int tickCount = 1;
 
-		SetLabel( QString::fromUtf8(str.c_str()) );
-	}
+    if (args && count > 0)
+    {
+      int n = 0;
+      if (args[0].GetInt(n))
+        tickCount = n;
+    }
+
+    encoder->Tick(tickCount);
+  }
+  else
+  {
+    std::string str;
+    if (args && count > 0)
+    {
+      if (!args[0].GetString(str))
+        str.clear();
+    }
+
+    SetLabel(QString::fromUtf8(str.c_str()));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ToyEncoderWidget::onTick(float radians)
 {
-	emit tick(this, radians);
+  emit tick(this, radians);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 ToyEncoderGrid::ToyEncoderGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags)
-	: ToyGrid(TOY_ENCODER_GRID, pClient, parent, flags)
+  : ToyGrid(TOY_ENCODER_GRID, pClient, parent, flags)
 {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ToyWidget* ToyEncoderGrid::CreateWidget()
+ToyWidget *ToyEncoderGrid::CreateWidget()
 {
-	ToyEncoderWidget *w = new ToyEncoderWidget(this);
-	connect(w, SIGNAL(tick(ToyEncoderWidget*,float)), this, SLOT(onTick(ToyEncoderWidget*,float)));
-	return w;
+  ToyEncoderWidget *w = new ToyEncoderWidget(this);
+  connect(w, SIGNAL(tick(ToyEncoderWidget *, float)), this, SLOT(onTick(ToyEncoderWidget *, float)));
+  return w;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void ToyEncoderGrid::onTick(ToyEncoderWidget *encoder, float radians)
 {
-	if(	m_pClient &&
-		encoder &&
-		!encoder->GetPath().isEmpty() )
-	{
-		QString path( encoder->GetPath() );
-		bool local = Utils::MakeLocalOSCPath(false, path);
+  if (m_pClient && encoder && !encoder->GetPath().isEmpty())
+  {
+    QString path(encoder->GetPath());
+    bool local = Utils::MakeLocalOSCPath(false, path);
 
-		OSCPacketWriter packetWriter( path.toUtf8().constData() );
-		
-		if( encoder->GetMin().isEmpty() )
-		{
-			if( !encoder->GetMax().isEmpty() )
-				packetWriter.AddFloat32( encoder->GetMax().toFloat() );
-		}
-		else if( encoder->GetMax().isEmpty() )
-		{
-			packetWriter.AddFloat32( encoder->GetMin().toFloat() );
-		}
-		else
-		{
-			float value = ((radians<0) ? encoder->GetMin().toFloat() : encoder->GetMax().toFloat());
-			packetWriter.AddFloat32(value);
-		}
+    OSCPacketWriter packetWriter(path.toUtf8().constData());
 
-		size_t size;
-		char *packet = packetWriter.Create(size);
-		if( packet )
-			m_pClient->ToyClient_Send(local, packet, size);
-	}
+    if (encoder->GetMin().isEmpty())
+    {
+      if (!encoder->GetMax().isEmpty())
+        packetWriter.AddFloat32(encoder->GetMax().toFloat());
+    }
+    else if (encoder->GetMax().isEmpty())
+    {
+      packetWriter.AddFloat32(encoder->GetMin().toFloat());
+    }
+    else
+    {
+      float value = ((radians < 0) ? encoder->GetMin().toFloat() : encoder->GetMax().toFloat());
+      packetWriter.AddFloat32(value);
+    }
+
+    size_t size;
+    char *packet = packetWriter.Create(size);
+    if (packet)
+      m_pClient->ToyClient_Send(local, packet, size);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

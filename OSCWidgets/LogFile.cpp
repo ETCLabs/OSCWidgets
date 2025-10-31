@@ -24,8 +24,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 LogFile::LogFile()
-	: m_Run(false)
-	, m_FileDepth(0)
+  : m_Run(false)
+  , m_FileDepth(0)
 {
 }
 
@@ -33,106 +33,102 @@ LogFile::LogFile()
 
 LogFile::~LogFile()
 {
-	Shutdown();
+  Shutdown();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void LogFile::Initialize(const QString &path, int fileDepth)
 {
-	Shutdown();
+  Shutdown();
 
-	if(fileDepth > 0)
-	{
-		m_Run = true;
-		m_Q.clear();
-		m_Path = path;
-		m_FileDepth = fileDepth;
-		start();
-	}
+  if (fileDepth > 0)
+  {
+    m_Run = true;
+    m_Q.clear();
+    m_Path = path;
+    m_FileDepth = fileDepth;
+    start();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void LogFile::Shutdown()
 {
-	m_Run = false;
-	wait();
+  m_Run = false;
+  wait();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void LogFile::Log(EosLog::LOG_Q &logQ)
 {
-	if( m_Run )
-	{
-		m_Mutex.lock();
-		m_Q.swap(logQ);
-		m_Mutex.unlock();
-	}
+  if (m_Run)
+  {
+    m_Mutex.lock();
+    m_Q.swap(logQ);
+    m_Mutex.unlock();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void LogFile::run()
 {
-	while( m_Run )
-	{
-		QFile file(m_Path);
-		if( file.open(QIODevice::WriteOnly|QIODevice::Truncate|QIODevice::Text) )
-		{
-			QTextStream stream( &file );
-            stream.setEncoding(QStringConverter::Utf8);
+  while (m_Run)
+  {
+    QFile file(m_Path);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+    {
+      QTextStream stream(&file);
+      stream.setEncoding(QStringConverter::Utf8);
 
-			EosLog::LOG_Q q;
-			int lineCount = 0;
-			bool restart = false;
+      EosLog::LOG_Q q;
+      int lineCount = 0;
+      bool restart = false;
 
-			for(;;)
-			{
-				q.clear();
-				m_Mutex.lock();
-				q.swap(m_Q);
-				m_Mutex.unlock();
+      for (;;)
+      {
+        q.clear();
+        m_Mutex.lock();
+        q.swap(m_Q);
+        m_Mutex.unlock();
 
-				for(EosLog::LOG_Q::const_iterator i=q.begin(); i!=q.end(); i++)
-				{
-					const EosLog::sLogMsg logMsg = *i;
+        for (EosLog::LOG_Q::const_iterator i = q.begin(); i != q.end(); i++)
+        {
+          const EosLog::sLogMsg logMsg = *i;
 
-					tm *t = localtime( &logMsg.timestamp );
+          tm *t = localtime(&logMsg.timestamp);
 
-					QString msgText;
-					if( logMsg.text.c_str() )
-						msgText = QString::fromUtf8( logMsg.text.c_str() );
+          QString msgText;
+          if (logMsg.text.c_str())
+            msgText = QString::fromUtf8(logMsg.text.c_str());
 
-					QString itemText = QString("[ %1:%2:%3 ]  %4")
-						.arg(t->tm_hour, 2)
-						.arg(t->tm_min, 2, 10, QChar('0'))
-						.arg(t->tm_sec, 2, 10, QChar('0'))
-						.arg( msgText );
+          QString itemText = QString("[ %1:%2:%3 ]  %4").arg(t->tm_hour, 2).arg(t->tm_min, 2, 10, QChar('0')).arg(t->tm_sec, 2, 10, QChar('0')).arg(msgText);
 
-					stream << itemText;
-					stream << "\n";
+          stream << itemText;
+          stream << "\n";
 
-					if(++lineCount > m_FileDepth)
-					{
-						restart = true;
-						break;
-					}
-				}
+          if (++lineCount > m_FileDepth)
+          {
+            restart = true;
+            break;
+          }
+        }
 
-				if(restart || !m_Run)
-					break;
+        if (restart || !m_Run)
+          break;
 
-				stream.flush();
+        stream.flush();
 
-				msleep(100);
-			}
+        msleep(100);
+      }
 
-			stream.flush();
-			file.close();
-		}
-	}
+      stream.flush();
+      file.close();
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

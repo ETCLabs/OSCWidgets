@@ -37,25 +37,25 @@
 class Utils
 {
 public:
-	static QString QuotedString(const QString &str);
-	static bool IsLocalOSCPath(const QString &path);
-	static bool MakeLocalOSCPath(bool b, QString &path);
-	static void GetItemsFromQuotedString(const QString &str, QStringList &items);
-	static void BlockFakeMouseEvents(bool b);
-	static void RegisterTouchWidget(QWidget &widget);
-	static bool IsBrightColor(const QColor &color);
-	static void MakeContrastingColor(float percent, QColor &color);
-	static void MakeBrighterColor(float percent, QColor &color);
-	static void MakeDarkerColor(float percent, QColor &color);
-	static void Snap(int snap, int &value);
-	static void Snap(int snap, QPoint &point);
+  static QString QuotedString(const QString &str);
+  static bool IsLocalOSCPath(const QString &path);
+  static bool MakeLocalOSCPath(bool b, QString &path);
+  static void GetItemsFromQuotedString(const QString &str, QStringList &items);
+  static void BlockFakeMouseEvents(bool b);
+  static void RegisterTouchWidget(QWidget &widget);
+  static bool IsBrightColor(const QColor &color);
+  static void MakeContrastingColor(float percent, QColor &color);
+  static void MakeBrighterColor(float percent, QColor &color);
+  static void MakeDarkerColor(float percent, QColor &color);
+  static void Snap(int snap, int &value);
+  static void Snap(int snap, QPoint &point);
 
 #ifdef WIN32
-	typedef BOOL (WINAPI *FuncRegisterTouchWindow)(HWND hWnd, ULONG ulFlags);
-	typedef BOOL (WINAPI *FuncUnregisterTouchWindow)(HWND hWnd);
-	static void	*sm_pFuncRegisterTouchWindow;
-	static void	*sm_pFuncUnregisterTouchWindow;	
-	static HHOOK sm_MouseMsgHook;
+  typedef BOOL(WINAPI *FuncRegisterTouchWindow)(HWND hWnd, ULONG ulFlags);
+  typedef BOOL(WINAPI *FuncUnregisterTouchWindow)(HWND hWnd);
+  static void *sm_pFuncRegisterTouchWindow;
+  static void *sm_pFuncUnregisterTouchWindow;
+  static HHOOK sm_MouseMsgHook;
 #endif
 };
 
@@ -64,40 +64,40 @@ public:
 class PixmapCache
 {
 public:
-	struct sPixmapCacheItem
-	{
-		const QPixmap	*pixmap;
-		unsigned int	refCount;
-	};
+  struct sPixmapCacheItem
+  {
+    const QPixmap *pixmap;
+    unsigned int refCount;
+  };
 
-	typedef std::map<QString,sPixmapCacheItem>	PIXMAP_LIST;
+  typedef std::map<QString, sPixmapCacheItem> PIXMAP_LIST;
 
-	PixmapCache();
-	virtual ~PixmapCache();
+  PixmapCache();
+  virtual ~PixmapCache();
 
-	virtual void Clear();
-	virtual const QPixmap* Create(const QString &path);
-	virtual const QPixmap* Get(const QString &path) const;
-	virtual void Destroy(const QString &path);
-	virtual const PIXMAP_LIST& GetList() const {return m_List;}
-	virtual void Get(const QString &path, QPixmap &pixmap) const;
-	virtual void GetScaledToFit(const QString &path, const QSize &size, QPixmap &pixmap) const;
-	virtual void GetScaledToFill(const QString &path, const QSize &size, QPixmap &pixmap) const;
+  virtual void Clear();
+  virtual const QPixmap *Create(const QString &path);
+  virtual const QPixmap *Get(const QString &path) const;
+  virtual void Destroy(const QString &path);
+  virtual const PIXMAP_LIST &GetList() const { return m_List; }
+  virtual void Get(const QString &path, QPixmap &pixmap) const;
+  virtual void GetScaledToFit(const QString &path, const QSize &size, QPixmap &pixmap) const;
+  virtual void GetScaledToFill(const QString &path, const QSize &size, QPixmap &pixmap) const;
 
-	static void Instantiate();
-	static void Shutdown();
-	static PixmapCache& Instance() {return *sm_Instance;}
-	static bool FitRectInBounds(const QRect &bounds, Qt::Alignment alignment, QRect &r);
+  static void Instantiate();
+  static void Shutdown();
+  static PixmapCache &Instance() { return *sm_Instance; }
+  static bool FitRectInBounds(const QRect &bounds, Qt::Alignment alignment, QRect &r);
 
 protected:
-	PIXMAP_LIST	m_List;
+  PIXMAP_LIST m_List;
 
-	static PixmapCache	*sm_Instance;
+  static PixmapCache *sm_Instance;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define PMC	PixmapCache::Instance()
+#define PMC PixmapCache::Instance()
 
 ////////////////////////////////////////////////////////////////////////////////
 

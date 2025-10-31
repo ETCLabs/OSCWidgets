@@ -32,26 +32,25 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class LogFile
-	: private QThread
+class LogFile : private QThread
 {
 public:
-	LogFile();
-	virtual ~LogFile();
+  LogFile();
+  virtual ~LogFile();
 
-	virtual void Initialize(const QString &path, int fileDepth);
-	virtual void Shutdown();
-	virtual void Log(EosLog::LOG_Q &logQ);
-	virtual const QString& GetPath() const {return m_Path;}
+  virtual void Initialize(const QString &path, int fileDepth);
+  virtual void Shutdown();
+  virtual void Log(EosLog::LOG_Q &logQ);
+  virtual const QString &GetPath() const { return m_Path; }
 
 protected:
-	bool			m_Run;
-	QString			m_Path;
-	int				m_FileDepth;
-	EosLog::LOG_Q	m_Q;
-	QRecursiveMutex	m_Mutex;
+  bool m_Run;
+  QString m_Path;
+  int m_FileDepth;
+  EosLog::LOG_Q m_Q;
+  QRecursiveMutex m_Mutex;
 
-	virtual void run();
+  virtual void run();
 };
 
 ////////////////////////////////////////////////////////////////////////////////

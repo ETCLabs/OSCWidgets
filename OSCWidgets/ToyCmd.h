@@ -28,86 +28,83 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class FadeCmd
-	: public QLineEdit
+class FadeCmd : public QLineEdit
 {
 public:
-	FadeCmd(QWidget *parent);
+  FadeCmd(QWidget *parent);
 
 protected:
-	virtual void AutoSizeFont();
-	virtual void resizeEvent(QResizeEvent *event);
+  virtual void AutoSizeFont();
+  virtual void resizeEvent(QResizeEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToyCmdWidget
-	: public ToyWidget
+class ToyCmdWidget : public ToyWidget
 {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
-	ToyCmdWidget(QWidget *parent);
-	
-	virtual void SetPath(const QString &text);
-	virtual void SetText(const QString &text);
-	virtual void SetImagePath(const QString &imagePath);
-	virtual void SetColor(const QColor &color);
-	virtual void SetTextColor(const QColor &textColor);
-	virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
-	virtual bool HasMinMax() const {return false;}
-	virtual bool HasTriggerPath() const {return true;}
-	
+  ToyCmdWidget(QWidget *parent);
+
+  virtual void SetPath(const QString &text);
+  virtual void SetText(const QString &text);
+  virtual void SetImagePath(const QString &imagePath);
+  virtual void SetColor(const QColor &color);
+  virtual void SetTextColor(const QColor &textColor);
+  virtual void Recv(const QString &path, const OSCArgument *args, size_t count);
+  virtual bool HasMinMax() const { return false; }
+  virtual bool HasTriggerPath() const { return true; }
+
 signals:
-	void send(ToyCmdWidget*);
+  void send(ToyCmdWidget *);
 
 private slots:
-	void onEditingFinished();
-	void onReturnPressed();
-	void onSendClicked(bool checked);
+  void onEditingFinished();
+  void onReturnPressed();
+  void onSendClicked(bool checked);
 
 protected:
-	FadeCmd		*m_Cmd;
-	FadeButton	*m_Send;
+  FadeCmd *m_Cmd;
+  FadeButton *m_Send;
 
-	virtual void UpdateToolTip();
+  virtual void UpdateToolTip();
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-class ToyCmdGrid
-	: public ToyGrid
+class ToyCmdGrid : public ToyGrid
 {
-	Q_OBJECT
-	
-public:
-	ToyCmdGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
-	
-	virtual void GetDefaultGridSize(QSize &gridSize) const {gridSize = QSize(1,6);}
-	virtual void SetSendOnConnect(bool b);
-	virtual void Connected();
-	virtual void SendAll();
-	
-private slots:
-	void onSend(ToyCmdWidget*);
-	void onSendAllClicked(bool checked);
-	void onSendAllTimeout();
-	void onStartupStateChanged(int state);
-	
-protected:
-	FadeButton		*m_SendAll;
-	QCheckBox		*m_Startup;
-	QTimer			*m_SendAllTimer;
-	size_t			m_SendAllIndex;
-	int				m_ButtonsHeight;
-	unsigned int	m_IgnoreUpdates;
+  Q_OBJECT
 
-	virtual ToyWidget* CreateWidget();
-	virtual QSize GetDefaultWidgetSize() const {return QSize(500,30);}
-	virtual void ApplyDefaultSettings(ToyWidget *widget, size_t index);
-	virtual void UpdateLayout();
-	virtual void UpdateSendAllButton();
-	virtual void AutoSize(const QSize &widgetSize);
+public:
+  ToyCmdGrid(Client *pClient, QWidget *parent, Qt::WindowFlags flags);
+
+  virtual void GetDefaultGridSize(QSize &gridSize) const { gridSize = QSize(1, 6); }
+  virtual void SetSendOnConnect(bool b);
+  virtual void Connected();
+  virtual void SendAll();
+
+private slots:
+  void onSend(ToyCmdWidget *);
+  void onSendAllClicked(bool checked);
+  void onSendAllTimeout();
+  void onStartupStateChanged(int state);
+
+protected:
+  FadeButton *m_SendAll;
+  QCheckBox *m_Startup;
+  QTimer *m_SendAllTimer;
+  size_t m_SendAllIndex;
+  int m_ButtonsHeight;
+  unsigned int m_IgnoreUpdates;
+
+  virtual ToyWidget *CreateWidget();
+  virtual QSize GetDefaultWidgetSize() const { return QSize(500, 30); }
+  virtual void ApplyDefaultSettings(ToyWidget *widget, size_t index);
+  virtual void UpdateLayout();
+  virtual void UpdateSendAllButton();
+  virtual void AutoSize(const QSize &widgetSize);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
