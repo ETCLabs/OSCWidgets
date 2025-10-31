@@ -45,6 +45,7 @@ Temporary Items
 # Visual Studio
 .vs
 *.vcxproj.user
+*.aps
 
 # XCode
 xcuserdata
