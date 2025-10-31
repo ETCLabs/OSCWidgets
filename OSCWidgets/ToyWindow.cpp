@@ -1223,6 +1223,7 @@ Toy *ToyWindow::AddToyToTab(size_t tabIndex, EnumToyType type, const QSize &grid
         tab->SetToySelected(toy, true);
         activateWindow();
         tab->setFocus();
+        raise();
         emit recvWidgetsChanged();
         emit changed();
       }

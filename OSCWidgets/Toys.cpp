@@ -350,6 +350,7 @@ void Toys::ActivateToy(size_t index)
       toy->showNormal();
 
     toy->activateWindow();
+    toy->raise();
   }
 }
 

@@ -1172,6 +1172,7 @@ void ToyGrid::onDone()
 
   SetMode(ToyWidget::MODE_DEFAULT);
   activateWindow();
+  raise();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
