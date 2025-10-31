@@ -173,8 +173,6 @@ private:
     TOY_TREE_ROLE_TOY_TYPE
   };
 
-  typedef std::vector<EosUdpInThread *> UDP_IN_THREADS;
-
   EosLog m_Log;
   EosLog::LOG_Q m_TempLogQ;
   LogWidget *m_LogWidget;
@@ -189,7 +187,7 @@ private:
   SettingsPanel *m_SettingsPanel;
   AdvancedPanel *m_Advanced;
   EosUdpOutThread *m_UdpOutThread;
-  UDP_IN_THREADS m_UdpInThreads;
+  EosUdpInThread *m_UdpInThread;
   EosTcpClientThread *m_TcpClientThread;
   PACKET_Q m_RecvQ;
   NETEVENT_Q m_NetEventQ;
@@ -204,7 +202,6 @@ private:
   bool m_SystemIdleAllowed;
 
   virtual void Start();
-  virtual void StartUdpInThreads(const QString &ip, unsigned short port);
   virtual void Shutdown();
   virtual void GetPersistentSavePath(QString &path) const;
   virtual void UpdateWindowTitle();

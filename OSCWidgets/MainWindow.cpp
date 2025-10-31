@@ -181,6 +181,7 @@ MainWindow::MainWindow(EosPlatform *platform, QWidget *parent /*=0*/, Qt::Window
   , m_LogDepth(200)
   , m_Unsaved(false)
   , m_UdpOutThread(0)
+  , m_UdpInThread(0)
   , m_TcpClientThread(0)
   , m_ToyTreeToyIndex(0)
   , m_ToyTreeType(Toy::TOY_INVALID)
@@ -400,18 +401,16 @@ void MainWindow::Shutdown()
     m_TcpClientThread = 0;
   }
 
-  for (UDP_IN_THREADS::const_iterator i = m_UdpInThreads.begin(); i != m_UdpInThreads.end(); i++)
+  if (m_UdpInThread)
   {
-    EosUdpInThread *udpInThread = *i;
-
-    udpInThread->Stop();
+    m_UdpInThread->Stop();
     ClearRecvQ();
-    udpInThread->Flush(m_TempLogQ, m_RecvQ);
+    m_UdpInThread->Flush(m_TempLogQ, m_RecvQ);
     m_Log.AddQ(m_TempLogQ);
 
-    delete udpInThread;
+    delete m_UdpInThread;
+    m_UdpInThread = 0;
   }
-  m_UdpInThreads.clear();
 
   if (m_UdpOutThread)
   {
@@ -674,46 +673,10 @@ void MainWindow::Start()
       m_UdpOutThread = new EosUdpOutThread();
       m_UdpOutThread->Start(ip, m_SettingsPanel->GetUdpOutputPort());
 
-      StartUdpInThreads(ip, m_SettingsPanel->GetUdpInputPort());
+      m_UdpInThread = new EosUdpInThread();
+      m_UdpInThread->Start(QString("0.0.0.0"), m_SettingsPanel->GetUdpInputPort());
     }
     break;
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void MainWindow::StartUdpInThreads(const QString &ip, unsigned short port)
-{
-  QHostAddress remoteAddr(ip);
-
-  if (remoteAddr.toIPv4Address() == QHostAddress(QHostAddress::LocalHost).toIPv4Address())
-  {
-    EosUdpInThread *udpInThread = new EosUdpInThread();
-    udpInThread->Start(ip, port);
-    m_UdpInThreads.push_back(udpInThread);
-  }
-  else
-  {
-    // 1 input thread per applicable network interface
-    QList<QNetworkInterface> allNics = QNetworkInterface::allInterfaces();
-    for (QList<QNetworkInterface>::const_iterator i = allNics.begin(); i != allNics.end(); i++)
-    {
-      const QNetworkInterface &nic = *i;
-      if (nic.isValid() && nic.flags().testFlag(QNetworkInterface::IsUp))
-      {
-        QList<QNetworkAddressEntry> addrs = nic.addressEntries();
-        for (QList<QNetworkAddressEntry>::const_iterator j = addrs.begin(); j != addrs.end(); j++)
-        {
-          QHostAddress addr = j->ip();
-          if (!addr.isNull() && addr.protocol() == QAbstractSocket::IPv4Protocol && remoteAddr.isInSubnet(addr, j->prefixLength()))
-          {
-            EosUdpInThread *udpInThread = new EosUdpInThread();
-            udpInThread->Start(j->ip().toString(), port);
-            m_UdpInThreads.push_back(udpInThread);
-          }
-        }
-      }
-    }
   }
 }
 
@@ -898,10 +861,10 @@ void MainWindow::onTick()
     ProcessRecvQ();
   }
 
-  for (UDP_IN_THREADS::const_iterator i = m_UdpInThreads.begin(); i != m_UdpInThreads.end(); i++)
+  if (m_UdpInThread)
   {
     ClearRecvQ();
-    (*i)->Flush(m_TempLogQ, m_RecvQ);
+    m_UdpInThread->Flush(m_TempLogQ, m_RecvQ);
     m_Log.AddQ(m_TempLogQ);
     ProcessRecvQ();
   }
