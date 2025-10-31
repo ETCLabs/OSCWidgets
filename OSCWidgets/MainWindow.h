@@ -133,7 +133,7 @@ class MainWindow
 	Q_OBJECT
 
 public:
-	MainWindow(EosPlatform *platform, QWidget *parent=0, Qt::WindowFlags f=0);
+	MainWindow(EosPlatform *platform, QWidget *parent=0, Qt::WindowFlags f=Qt::WindowFlags());
 	virtual ~MainWindow();
 	
 	virtual void FlushLogQ(EosLog::LOG_Q &logQ);

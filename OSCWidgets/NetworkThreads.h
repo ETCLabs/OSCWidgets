@@ -96,7 +96,7 @@ protected:
 	EosLog			m_PrivateLog;
 	PACKET_Q		m_Q;
 	NETEVENT_Q		m_NetEventQ;
-	QMutex			m_Mutex;
+	QRecursiveMutex	m_Mutex;
 	std::string		m_Prefix;
 	std::string		m_LogMsg;
 
@@ -130,7 +130,7 @@ protected:
 	EosLog			m_Log;
 	EosLog			m_PrivateLog;
 	PACKET_Q		m_Q;
-	QMutex			m_Mutex;
+	QRecursiveMutex	m_Mutex;
 	std::string		m_Prefix;
 	std::string		m_LogMsg;
 
@@ -169,7 +169,7 @@ protected:
 	PACKET_Q					m_RecvQ;
 	PACKET_Q					m_SendQ;
 	NETEVENT_Q					m_NetEventQ;
-	QMutex						m_Mutex;
+	QRecursiveMutex				m_Mutex;
 	std::string					m_Prefix;
 	std::string					m_LogMsg;
 	EosLog::EnumLogMsgType		m_LogMsgType;

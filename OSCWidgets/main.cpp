@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
 
 	app.setDesktopSettingsAware(false);
 	app.setQuitOnLastWindowClosed(false);
+    app.styleHints()->setColorScheme(Qt::ColorScheme::Dark);
     app.setStyle(QStyleFactory::create("Fusion"));
 
 	QPalette pal;

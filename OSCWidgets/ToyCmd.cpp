@@ -56,7 +56,7 @@ ToyCmdWidget::ToyCmdWidget(QWidget *parent)
 
 	m_Widget = new QWidget(this);
 	QGridLayout *layout = new QGridLayout(m_Widget);
-	layout->setMargin(2);
+    layout->setContentsMargins(2, 2, 2, 2);
 	layout->setSpacing(4);
 
 	m_Cmd = new FadeCmd(m_Widget);

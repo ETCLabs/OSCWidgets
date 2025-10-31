@@ -37,7 +37,6 @@
 #ifdef WIN32
 	#include <Windows.h>
 	#include "resource.h"
-	#include <QtWinExtras/QtWin>
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +161,7 @@ void Toy::SetDefaultWindowIcon(QWidget &w)
 			HICON hIcon = static_cast<HICON>( LoadImage(GetModuleHandle(0),MAKEINTRESOURCE(IDI_ICON1),IMAGE_ICON,iconSizes[i],iconSizes[i],LR_LOADTRANSPARENT) );
 			if( hIcon )
 			{
-                sIcon->addPixmap( QtWin::fromHICON(hIcon) );
+                sIcon->addPixmap(QPixmap::fromImage(QImage::fromHICON(hIcon)));
 				DestroyIcon(hIcon);
 			}
 		}
@@ -184,15 +183,15 @@ void Toy::SnapToEdges()
 
 void Toy::SnapToScreen(QWidget &w, int threshold)
 {
-	QDesktopWidget *desktop = QApplication::desktop();
-	if( desktop )
+	Qt::WindowStates ws = w.windowState();
+	if(!ws.testFlag(Qt::WindowMinimized) && !ws.testFlag(Qt::WindowMaximized))
 	{
-		Qt::WindowStates ws = w.windowState();
-		if(!ws.testFlag(Qt::WindowMinimized) && !ws.testFlag(Qt::WindowMaximized))
+		QRect fr( w.frameGeometry() );
+		QSize frameSize(fr.size() - w.size());
+        QScreen *screen = qApp->screenAt(fr.center());
+		if (screen)
 		{
-			QRect fr( w.frameGeometry() );
-			QSize frameSize(fr.size() - w.size());
-			QRect dr( desktop->availableGeometry(fr.center()) );
+			QRect dr(screen->availableGeometry());
 			if(!fr.isEmpty() && !dr.isEmpty())
 			{
 				// top/bottom snap
@@ -228,11 +227,11 @@ void Toy::SnapToScreen(QWidget &w, int threshold)
 
 void Toy::ClipToScreen(QWidget &w)
 {
-	QDesktopWidget *desktop = QApplication::desktop();
-	if( desktop )
+	QRect fr( w.frameGeometry() );
+	QScreen *screen = qApp->screenAt(fr.center());
+    if (screen)
 	{
-		QRect fr( w.frameGeometry() );
-		QRect dr( desktop->availableGeometry(fr.center()) );
+		QRect dr( screen->availableGeometry() );
 
 		// top/bottom clip
 		if(fr.top() < dr.top())

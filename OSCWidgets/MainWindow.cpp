@@ -175,7 +175,7 @@ void OpacityMenu::onTriggeredWithOpacity(int opacity)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-MainWindow::MainWindow(EosPlatform *platform, QWidget* parent/*=0*/, Qt::WindowFlags f/*=0*/)
+MainWindow::MainWindow(EosPlatform *platform, QWidget* parent/*=0*/, Qt::WindowFlags f/*=Qt::WindowFlags()*/)
 	: QWidget(parent, f)
 	, m_Settings("ETC", "OSCWidgets")
 	, m_LogDepth(200)
@@ -452,7 +452,7 @@ void MainWindow::ClearNetEventQ()
 
 void MainWindow::GetPersistentSavePath(QString &path) const
 {
-    path = QDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation)).absoluteFilePath("save.oscwidgets.txt");
+    path = QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)).absoluteFilePath("save.oscwidgets.txt");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -484,7 +484,7 @@ bool MainWindow::LoadFile(const QString &path, bool setLastFile)
 			QTextStream textStream( &f );
 			QString contents( textStream.readAll() );
 			contents.remove('\r');
-			lines = contents.split('\n',QString::KeepEmptyParts);
+			lines = contents.split('\n',Qt::KeepEmptyParts);
 		}
 
 		f.close();
@@ -528,8 +528,7 @@ bool MainWindow::SaveFile(const QString &path, bool setLastFile)
 		m_Toys->Save(m_Log, path, lines);
 
 		QTextStream textStream( &f );
-		textStream.setCodec("UTF-8");
-		textStream.setGenerateByteOrderMark(true);
+        textStream.setEncoding(QStringConverter::Utf8);
 
 		for(QStringList::iterator i=lines.begin(); i!=lines.end(); i++)
 			textStream << *i << "\n";

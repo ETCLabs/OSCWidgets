@@ -26,7 +26,6 @@
 LogFile::LogFile()
 	: m_Run(false)
 	, m_FileDepth(0)
-	, m_Mutex(QMutex::Recursive)
 {
 }
 
@@ -83,8 +82,7 @@ void LogFile::run()
 		if( file.open(QIODevice::WriteOnly|QIODevice::Truncate|QIODevice::Text) )
 		{
 			QTextStream stream( &file );
-			stream.setCodec("UTF-8");
-			stream.setGenerateByteOrderMark(true);
+            stream.setEncoding(QStringConverter::Utf8);
 
 			EosLog::LOG_Q q;
 			int lineCount = 0;

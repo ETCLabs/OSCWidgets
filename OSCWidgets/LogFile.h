@@ -49,7 +49,7 @@ protected:
 	QString			m_Path;
 	int				m_FileDepth;
 	EosLog::LOG_Q	m_Q;
-	QMutex			m_Mutex;
+	QRecursiveMutex	m_Mutex;
 
 	virtual void run();
 };

@@ -49,7 +49,6 @@ bool OSCHandler::ProcessPacket(OSCParserClient &client, char *buf, size_t size)
 EosUdpOutThread::EosUdpOutThread()
 	: m_Port(0)
 	, m_Run(false)
-	, m_Mutex(QMutex::Recursive)
 {
 }
 
@@ -204,7 +203,6 @@ void EosUdpOutThread::UpdateLog()
 EosUdpInThread::EosUdpInThread()
 	: m_Port(0)
 	, m_Run(false)
-	, m_Mutex(QMutex::Recursive)
 {
 }
 
@@ -374,7 +372,6 @@ EosTcpClientThread::EosTcpClientThread()
 	: m_Port(0)
 	, m_LogMsgType(EosLog::LOG_MSG_TYPE_INFO)
 	, m_Run(false)
-	, m_Mutex(QMutex::Recursive)
 {
 }
 

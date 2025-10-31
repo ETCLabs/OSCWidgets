@@ -563,7 +563,7 @@ Toy* ToyWindowTab::AddToy(Toy::EnumToyType type, const QSize &gridSize, const QP
 {
 	sFrame frame;
 
-	frame.toy = Toy::Create(type, pClient, this, /*flags*/0);
+	frame.toy = Toy::Create(type, pClient, this, Qt::WindowFlags());
 	if( frame.toy )
 	{
 		frame.toy->setContentsMargins(0, 0, 0, 0);
@@ -674,7 +674,7 @@ void ToyWindowTab::UpdateGridBackground()
 				
 				QFont fnt( font() );
 				fnt.setPixelSize(100);
-				int textWidth = QFontMetrics(fnt).width( tr("Layout Mode") );
+				int textWidth = QFontMetrics(fnt).horizontalAdvance( tr("Layout Mode") );
 				if(textWidth > 0)
 				{
 					int preferredTextWidth = qRound(width() * 0.8);
