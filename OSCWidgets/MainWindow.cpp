@@ -547,9 +547,11 @@ bool MainWindow::SaveFile(const QString &path, bool setLastFile)
 
   if (!success)
   {
-    QMessageBox mb(QMessageBox::NoIcon, tr("OSCWidgets"), tr("Unable to save file \"%1\"\n\n%2").arg(path).arg(f.errorString()), QMessageBox::Ok, this);
-    mb.setIconPixmap(QPixmap(":/assets/images/IconWarning.png"));
-    mb.exec();
+    QMessageBox *mb = new QMessageBox(QMessageBox::NoIcon, tr("OSCWidgets"), tr("Unable to save file \"%1\"\n\n%2").arg(path).arg(f.errorString()), QMessageBox::Ok, this);
+    mb->setAttribute(Qt::WA_DeleteOnClose);
+    mb->setIconPixmap(QPixmap(":/assets/images/IconWarning.png"));
+    mb->setModal(true);
+    mb->show();
   }
 
   return success;
@@ -928,9 +930,11 @@ void MainWindow::onOpenFileClicked()
     {
       if (!LoadFile(path, /*setLastFile*/ true))
       {
-        QMessageBox mb(QMessageBox::NoIcon, tr("OSCWidgets"), tr("Unable to open file \"%1\"").arg(path), QMessageBox::Ok, this);
-        mb.setIconPixmap(QPixmap(":/assets/images/IconWarning.png"));
-        mb.exec();
+        QMessageBox *mb = new QMessageBox(QMessageBox::NoIcon, tr("OSCWidgets"), tr("Unable to open file \"%1\"").arg(path), QMessageBox::Ok, this);
+        mb->setAttribute(Qt::WA_DeleteOnClose);
+        mb->setIconPixmap(QPixmap(":/assets/images/IconWarning.png"));
+        mb->setModal(true);
+        mb->show();
       }
     }
   }
@@ -1135,11 +1139,23 @@ void MainWindow::onToyTreeItemDeleted()
     QString name;
     toy->GetName(name);
 
-    QMessageBox mb(QMessageBox::NoIcon, tr("Delete"), tr("Are you sure you want to delete %1").arg(name), QMessageBox::Yes | QMessageBox::Cancel, this);
-    mb.setIconPixmap(QPixmap(":/assets/images/IconQuestion.png"));
-    if (mb.exec() == QMessageBox::Yes)
-      m_Toys->DeleteToy(m_ToyTreeToyIndex);
+    QMessageBox *mb = new QMessageBox(QMessageBox::NoIcon, tr("Delete"), tr("Are you sure you want to delete %1").arg(name), QMessageBox::Yes | QMessageBox::Cancel, this);
+    mb->setAttribute(Qt::WA_DeleteOnClose);
+    mb->setIconPixmap(QPixmap(":/assets/images/IconQuestion.png"));
+    mb->setModal(true);
+    connect(mb, &QMessageBox::finished, this, &MainWindow::onToyTreeItemDeleteConfirm);
+    mb->show();
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void MainWindow::onToyTreeItemDeleteConfirm(int result)
+{
+  if (result != QMessageBox::Yes)
+    return;
+  
+  m_Toys->DeleteToy(m_ToyTreeToyIndex);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

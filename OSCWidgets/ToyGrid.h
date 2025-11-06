@@ -145,6 +145,7 @@ private slots:
   void onEditToyWidget();
   void onLayoutMode();
   void onDelete();
+  void onDeleteConfirm(int result);
   void onToggleMainWindow();
   void onWidgetEdited(ToyWidget *widget);
   void onEdited();

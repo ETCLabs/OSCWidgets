@@ -157,6 +157,7 @@ private slots:
   void onToyTreeItemActivated(QTreeWidgetItem *item, int column);
   void onToyTreeCustomContextMenuRequested(const QPoint &p);
   void onToyTreeItemDeleted();
+  void onToyTreeItemDeleteConfirm(int result);
   void onToyTreeItemAdded();
   void onSystemTrayToggledMainWindow();
   void onSystemTrayToggleToys();

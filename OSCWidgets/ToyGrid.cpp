@@ -990,13 +990,23 @@ void ToyGrid::onDelete()
 {
   QString name;
   GetName(name);
-  QMessageBox mb(QMessageBox::NoIcon, tr("Delete"), tr("Are you sure you want to delete %1").arg(name), QMessageBox::Yes | QMessageBox::Cancel, this);
-  mb.setIconPixmap(QPixmap(":/assets/images/IconQuestion.png"));
-  if (mb.exec() == QMessageBox::Yes)
-  {
-    CloseEditPanel();
-    emit closing(this);
-  }
+  QMessageBox *mb = new QMessageBox(QMessageBox::NoIcon, tr("Delete"), tr("Are you sure you want to delete %1").arg(name), QMessageBox::Yes | QMessageBox::Cancel, this);
+  mb->setAttribute(Qt::WA_DeleteOnClose);
+  mb->setModal(true);
+  mb->setIconPixmap(QPixmap(":/assets/images/IconQuestion.png"));
+  connect(mb, &QMessageBox::finished, this, &ToyGrid::onDeleteConfirm);
+  mb->show();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void ToyGrid::onDeleteConfirm(int result)
+{
+  if (result != QMessageBox::Yes)
+    return;
+  
+  CloseEditPanel();
+  emit closing(this);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
