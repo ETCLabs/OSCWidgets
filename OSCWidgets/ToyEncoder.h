@@ -68,7 +68,6 @@ protected:
   sPosF m_MousePos;
   int m_TextMargin;
   int m_LabelMargin;
-  QImage m_Canvas;
 
   virtual void AutoSizeFont();
   virtual void UpdateMargins();

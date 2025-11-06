@@ -135,7 +135,7 @@ void FadeButton::UpdateImage(size_t index)
 void FadeButton::StartClick()
 {
   m_ClickTimestamp.Start();
-  m_ClickTimer->start(20);
+  m_ClickTimer->start(16);
   onClickTimeout();
 }
 
@@ -162,19 +162,19 @@ void FadeButton::SetClick(float percent)
 
 void FadeButton::Flash()
 {
-  m_Hover = 1.0;
-  m_HoverTimestamp.Start();
-  m_HoverTimer->start(20);
-  onHoverTimeout();
+  SetHover(1.0);
+  StartHover();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 void FadeButton::StartHover()
 {
-  m_HoverTimestamp.Start();
-  m_HoverTimer->start(20);
-  onHoverTimeout();
+  if (!m_HoverTimer->isActive())
+  {
+    m_HoverTimestamp.Start();
+    m_HoverTimer->start(16);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -368,7 +368,7 @@ void FadeButton::onClickTimeout()
 
 void FadeButton::onHoverTimeout()
 {
-  float t = (m_HoverTimestamp.GetElapsed() * BUTTON_HOVER_SPEED);
+  float t = (m_HoverTimestamp.Restart() * BUTTON_HOVER_SPEED);
 
   if (underMouse())
   {
@@ -401,7 +401,10 @@ bool FadeButton::event(QEvent *event)
     switch (event->type())
     {
       case QEvent::HoverEnter:
-      case QEvent::HoverLeave: StartHover(); break;
+      case QEvent::HoverLeave:
+        StartHover();
+        event->accept();
+        break;
 
       case QEvent::TouchBegin:
       {

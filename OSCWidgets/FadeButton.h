@@ -54,6 +54,7 @@ public:
   virtual void Press(bool user = true);
   virtual void Release(bool user = true);
   virtual void Flash();
+  virtual bool event(QEvent *event);
 
 private slots:
   void onPressed();
@@ -76,6 +77,7 @@ protected:
   EosTimer m_ClickTimestamp;
   float m_Hover;
   QTimer *m_HoverTimer;
+  bool m_Hovered;
   EosTimer m_HoverTimestamp;
   QString m_Label;
   sImage m_Images[NUM_IMAGES];
@@ -92,7 +94,6 @@ protected:
   virtual void RenderBackground(QPainter &painter, QRectF &r);
   virtual void resizeEvent(QResizeEvent *event);
   virtual void paintEvent(QPaintEvent *event);
-  virtual bool event(QEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////

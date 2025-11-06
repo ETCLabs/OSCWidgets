@@ -28,7 +28,24 @@ GridSizeButton::GridSizeButton(int col, int row, QWidget *parent)
   , m_Col(col)
   , m_Row(row)
 {
+  setFocusPolicy(Qt::NoFocus);
   connect(this, SIGNAL(clicked(bool)), this, SLOT(onClicked(bool)));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+bool GridSizeButton::event(QEvent *event)
+{
+  if (event)
+  {
+    switch (event->type())
+    {
+      case QEvent::HoverEnter:
+      case QEvent::MouseMove: emit hoveredGridSize(m_Col, m_Row); break;
+    }
+  }
+
+  return FadeButton::event(event);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,14 +53,6 @@ GridSizeButton::GridSizeButton(int col, int row, QWidget *parent)
 void GridSizeButton::onClicked(bool /*checked*/)
 {
   emit clickedGridSize(m_Col, m_Row);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void GridSizeButton::StartHover()
-{
-  FadeButton_NoTouch::StartHover();
-  emit hoveredGridSize(m_Col, m_Row);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -104,9 +113,6 @@ void GridSizeMenu::SetHover(int hoverCol, int hoverRow)
 
       GridSizeButton *button = m_Buttons[col][row];
       button->setPalette(pal);
-
-      if (highlight && (col == hoverCol || row == hoverRow))
-        button->Flash();
     }
   }
 

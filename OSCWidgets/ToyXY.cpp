@@ -186,7 +186,6 @@ void FadeXY::UpdateMargins()
 
 void FadeXY::resizeEvent(QResizeEvent *event)
 {
-  m_Canvas = QImage(size(), QImage::Format_ARGB32);
   UpdateMargins();
   FadeButton::resizeEvent(event);
 }
@@ -227,96 +226,82 @@ void FadeXY::mouseReleaseEvent(QMouseEvent *event)
 
 void FadeXY::paintEvent(QPaintEvent * /*event*/)
 {
-  m_Canvas.fill(0);
-
   QRectF r(rect());
   r.adjust(1 + HALF_BORDER, 1 + HALF_BORDER + m_TextMargin, -1 - HALF_BORDER, -1 - HALF_BORDER - m_LabelMargin);
 
-  QPainter painter;
-  if (painter.begin(&m_Canvas))
+  QPainter painter(this);
+  painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+
+  float brightness = m_Click;
+  if (m_Hover > 0)
+    brightness += (m_Hover * 0.2f);
+
+  QColor color(palette().color(QPalette::Button));
+  if (brightness > 0)
   {
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    qreal t = (brightness * BUTTON_BRIGHTESS);
+    color.setRedF(qMin(color.redF() + t, 1.0));
+    color.setGreenF(qMin(color.greenF() + t, 1.0));
+    color.setBlueF(qMin(color.blueF() + t, 1.0));
+  }
 
-    float brightness = m_Click;
-    if (m_Hover > 0)
-      brightness += (m_Hover * 0.2f);
+  QPainterPath clip;
+  clip.addRoundedRect(r, ROUNDED, ROUNDED);
+  painter.setClipPath(clip);
 
-    QColor color(palette().color(QPalette::Button));
-    if (brightness > 0)
-    {
-      qreal t = (brightness * BUTTON_BRIGHTESS);
-      color.setRedF(qMin(color.redF() + t, 1.0));
-      color.setGreenF(qMin(color.greenF() + t, 1.0));
-      color.setBlueF(qMin(color.blueF() + t, 1.0));
-    }
+  const QPixmap &pixmap = m_Images[m_ImageIndex].pixmap;
+  if (!pixmap.isNull())
+  {
+    painter.drawPixmap(r.x() + qRound((r.width() - pixmap.width()) * 0.5), r.y() + qRound((r.height() - pixmap.height()) * 0.5), pixmap);
+  }
 
-    QPainterPath clip;
-    clip.addRoundedRect(r, ROUNDED, ROUNDED);
-    painter.setClipPath(clip);
+  painter.setClipping(false);
 
-    const QPixmap &pixmap = m_Images[m_ImageIndex].pixmap;
-    if (!pixmap.isNull())
-    {
-      painter.drawPixmap(r.x() + qRound((r.width() - pixmap.width()) * 0.5), r.y() + qRound((r.height() - pixmap.height()) * 0.5), pixmap);
-    }
+  painter.setPen(QPen(color, BORDER, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin));
+  painter.setBrush(Qt::NoBrush);
+  painter.drawRoundedRect(r, ROUNDED, ROUNDED);
 
-    painter.setClipping(false);
+  painter.setRenderHint(QPainter::Antialiasing, false);
 
-    painter.setPen(QPen(color, BORDER, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin));
-    painter.setBrush(Qt::NoBrush);
-    painter.drawRoundedRect(r, ROUNDED, ROUNDED);
+  painter.setOpacity(0.15);
+  QPoint pos = PosToWidgetPos(QPointF(0.5, 0.5));
+  painter.drawLine(pos.x(), r.y(), pos.x(), r.bottom());
+  painter.drawLine(r.x(), pos.y(), r.right(), pos.y());
+  painter.setOpacity(1.0);
 
-    painter.setRenderHint(QPainter::Antialiasing, false);
+  painter.setClipping(true);
 
-    painter.setOpacity(0.15);
-    QPoint pos = PosToWidgetPos(QPointF(0.5, 0.5));
-    painter.drawLine(pos.x(), r.y(), pos.x(), r.bottom());
-    painter.drawLine(r.x(), pos.y(), r.right(), pos.y());
-    painter.setOpacity(1.0);
+  if (m_RecvPos.pending)
+  {
+    painter.setPen(QPen(color.darker(125), BORDER));
 
-    painter.setClipping(true);
-
-    if (m_RecvPos.pending)
-    {
-      painter.setPen(QPen(color.darker(125), BORDER));
-
-      pos = PosToWidgetPos(m_RecvPos.pos);
-      ClipWidgetPosForPainting(r, pos);
-      painter.drawLine(pos.x(), r.y(), pos.x(), r.bottom());
-      painter.drawLine(r.x(), pos.y(), r.right(), pos.y());
-
-      painter.setPen(QPen(color, BORDER));
-    }
-
-    pos = PosToWidgetPos(m_Pos);
+    pos = PosToWidgetPos(m_RecvPos.pos);
     ClipWidgetPosForPainting(r, pos);
     painter.drawLine(pos.x(), r.y(), pos.x(), r.bottom());
     painter.drawLine(r.x(), pos.y(), r.right(), pos.y());
 
-    painter.end();
+    painter.setPen(QPen(color, BORDER));
+  }
 
-    if (painter.begin(this))
-    {
-      painter.drawImage(0, 0, m_Canvas);
+  pos = PosToWidgetPos(m_Pos);
+  ClipWidgetPosForPainting(r, pos);
+  painter.drawLine(pos.x(), r.y(), pos.x(), r.bottom());
+  painter.drawLine(r.x(), pos.y(), r.right(), pos.y());
 
-      int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
+  int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
 
-      if (!text().isEmpty())
-      {
-        painter.setPen(palette().color(QPalette::ButtonText));
-        painter.drawText(QRect(0, 0, width(), r.y() - hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, text());
+  if (!text().isEmpty())
+  {
+    painter.setPen(palette().color(QPalette::ButtonText));
+    painter.drawText(QRect(0, 0, width(), r.y() - hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, text());
 
-        if (!m_Label.isEmpty())
-          painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
-      }
-      else if (!m_Label.isEmpty())
-      {
-        painter.setPen(palette().color(QPalette::ButtonText));
-        painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
-      }
-
-      painter.end();
-    }
+    if (!m_Label.isEmpty())
+      painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
+  }
+  else if (!m_Label.isEmpty())
+  {
+    painter.setPen(palette().color(QPalette::ButtonText));
+    painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
   }
 }
 

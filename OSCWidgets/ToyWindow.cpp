@@ -498,7 +498,6 @@ void ToyWindowTab::SetShowGrid(bool b)
   if (m_ShowGrid != b)
   {
     m_ShowGrid = b;
-    UpdateGridBackground();
     update();
   }
 }
@@ -638,64 +637,6 @@ void ToyWindowTab::ClipFrameToBounds(size_t index)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void ToyWindowTab::UpdateGridBackground()
-{
-  if (m_ShowGrid)
-  {
-    bool dirty = false;
-
-    if (m_GridBackgroundImage.size() != size())
-    {
-      m_GridBackgroundImage = QImage(size(), QImage::Format_RGB32);
-      dirty = true;
-    }
-
-    QColor bgColor(palette().color(QPalette::Window));
-    if (m_GridBackgroundColor != bgColor)
-      dirty = true;
-
-    if (dirty && !m_GridBackgroundImage.isNull())
-    {
-      m_GridBackgroundImage.fill(bgColor);
-
-      QPainter painter;
-      if (painter.begin(&m_GridBackgroundImage))
-      {
-        Utils::MakeContrastingColor(0.5, bgColor);
-
-        QFont fnt(font());
-        fnt.setPixelSize(100);
-        int textWidth = QFontMetrics(fnt).horizontalAdvance(tr("Layout Mode"));
-        if (textWidth > 0)
-        {
-          int preferredTextWidth = qRound(width() * 0.8);
-          qreal scale = preferredTextWidth / static_cast<qreal>(textWidth);
-          fnt.setPixelSize(qRound(fnt.pixelSize() * scale));
-          painter.setFont(fnt);
-
-          QColor textColor(bgColor);
-          textColor.setAlpha(64);
-          painter.setPen(textColor);
-          painter.setRenderHint(QPainter::TextAntialiasing);
-          painter.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, tr("Layout Mode"));
-        }
-
-        painter.setPen(bgColor);
-
-        for (int x = 0; x <= width(); x += GRID_SPACING)
-        {
-          for (int y = 0; y <= height(); y += GRID_SPACING)
-            painter.drawPoint(x, y);
-        }
-
-        painter.end();
-      }
-    }
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 size_t ToyWindowTab::GetFrameIndex(EditFrame *editFrame) const
 {
   if (editFrame != 0)
@@ -758,38 +699,42 @@ void ToyWindowTab::SetToySelected(Toy *toy, bool b)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool ToyWindowTab::event(QEvent *event)
-{
-  switch (event->type())
-  {
-    case QEvent::PaletteChange: UpdateGridBackground(); break;
-  }
-
-  return QWidget::event(event);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-void ToyWindowTab::resizeEvent(QResizeEvent * /*event*/)
-{
-  UpdateGridBackground();
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 void ToyWindowTab::paintEvent(QPaintEvent * /*event*/)
 {
   QPainter painter(this);
   painter.setRenderHint(QPainter::Antialiasing, false);
 
-  if (m_ShowGrid && !m_GridBackgroundImage.isNull())
+  QColor bgColor(palette().color(QPalette::Window));
+  painter.fillRect(rect(), bgColor);
+
+  if (m_ShowGrid)
   {
-    painter.drawImage(0, 0, m_GridBackgroundImage);
-  }
-  else
-  {
-    QColor bgColor(palette().color(QPalette::Window));
-    painter.fillRect(rect(), bgColor);
+    Utils::MakeContrastingColor(0.5, bgColor);
+
+    QFont fnt(font());
+    fnt.setPixelSize(100);
+    int textWidth = QFontMetrics(fnt).horizontalAdvance(tr("Layout Mode"));
+    if (textWidth > 0)
+    {
+      int preferredTextWidth = qRound(width() * 0.8);
+      qreal scale = preferredTextWidth / static_cast<qreal>(textWidth);
+      fnt.setPixelSize(qRound(fnt.pixelSize() * scale));
+      painter.setFont(fnt);
+
+      QColor textColor(bgColor);
+      textColor.setAlpha(64);
+      painter.setPen(textColor);
+      painter.setRenderHint(QPainter::TextAntialiasing);
+      painter.drawText(QRect(0, 0, width(), height()), Qt::AlignCenter, tr("Layout Mode"));
+    }
+
+    painter.setPen(bgColor);
+
+    for (int x = 0; x <= width(); x += GRID_SPACING)
+    {
+      for (int y = 0; y <= height(); y += GRID_SPACING)
+        painter.drawPoint(x, y);
+    }
   }
 
   if (!m_GrabbedRect.isNull())

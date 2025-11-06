@@ -166,24 +166,25 @@ void FadePedal::Tick(float value)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void FadePedal::resizeEvent(QResizeEvent *event)
-{
-  m_Canvas = QImage(size(), QImage::Format_ARGB32);
-  FadeButton::resizeEvent(event);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 void FadePedal::paintEvent(QPaintEvent * /*event*/)
 {
+  qreal dpr = devicePixelRatioF();
+  if (dpr < 0)
+    dpr = 1;
+
+  QSize canvasSize(qRound(width() * dpr), qRound(height() * dpr));
+  if (m_Canvas.size() != canvasSize)
+    m_Canvas = QImage(canvasSize, QImage::Format_ARGB32);
+
   float lastValue = (m_Ticks.empty() ? 0 : m_Ticks.back().value);
   float angle = (35 * lastValue);
 
-  QRectF r(rect());
+  QRectF r = m_Canvas.rect();
   r.adjust(1, 1, -1, -1);
 
   QPainter painter;
   m_Canvas.fill(0);
+  m_Canvas.setDevicePixelRatio(1);
   if (painter.begin(&m_Canvas))
   {
     painter.setRenderHints(QPainter::Antialiasing);
@@ -259,7 +260,7 @@ void FadePedal::paintEvent(QPaintEvent * /*event*/)
 
     if (m_Hover > 0)
     {
-      qreal dy = (-m_Hover * BUTTON_RAISE);
+      qreal dy = (-m_Hover * BUTTON_RAISE * dpr);
       if (dy != 0)
         r.adjust(0, 0, 0, dy);
     }
@@ -306,17 +307,19 @@ void FadePedal::paintEvent(QPaintEvent * /*event*/)
 
   if (painter.begin(this))
   {
+    m_Canvas.setDevicePixelRatio(dpr);
+
     if (angle > 0.00001)
     {
-      qreal center = (m_Canvas.width() * 0.5);
+      qreal center = (width() * 0.5);
       QMatrix4x4 matrix;
-      matrix.translate(-center, m_Canvas.height());
+      matrix.translate(-center, height());
       matrix.rotate(angle, 1.0, 0, 0);
 
       painter.translate(center, 0);
       painter.setTransform(matrix.toTransform(300.0), /*combine*/ true);
       painter.setRenderHint(QPainter::SmoothPixmapTransform);
-      painter.drawImage(0, -m_Canvas.height(), m_Canvas);
+      painter.drawImage(0, -height(), m_Canvas);
     }
     else
       painter.drawImage(0, 0, m_Canvas);

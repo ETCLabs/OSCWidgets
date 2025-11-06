@@ -53,6 +53,7 @@ class GridSizeButton : public FadeButton_NoTouch
 
 public:
   GridSizeButton(int col, int row, QWidget *parent);
+  virtual bool event(QEvent *event);
 
 signals:
   void hoveredGridSize(int col, int row);
@@ -64,8 +65,6 @@ private slots:
 protected:
   int m_Col;
   int m_Row;
-
-  virtual void StartHover();
 };
 
 ////////////////////////////////////////////////////////////////////////////////
