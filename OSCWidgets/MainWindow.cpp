@@ -27,7 +27,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define APP_VERSION "1.0.0"
+#define APP_VERSION "1.0.1"
 
 #define MIN_OPACITY 10
 
@@ -281,8 +281,6 @@ MainWindow::MainWindow(EosPlatform *platform, QWidget *parent /*=0*/, Qt::Window
   PopulateToyTree();
   RestoreLastFile();
   UpdateWindowTitle();
-
-  // resize(800, 380);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -715,12 +713,18 @@ void MainWindow::ProcessNetEventQ()
 
 void MainWindow::MakeToyIcon(const Toy &toy, const QSize &iconSize, QIcon &icon) const
 {
-  QImage canvas(iconSize, QImage::Format_ARGB32);
+  qreal dpr = devicePixelRatioF();
+  if (dpr < 0)
+    dpr = 1;
+
+  QSize canvasSize(qRound(iconSize.width() * dpr), qRound(iconSize.height() * dpr));
+
+  QImage canvas(canvasSize, QImage::Format_ARGB32);
   canvas.fill(0);
 
   QPixmap toyIcon(toy.GetImagePath());
   if (!toyIcon.isNull())
-    toyIcon = toyIcon.scaled(iconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    toyIcon = toyIcon.scaled(canvasSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
   QPainter painter;
   if (painter.begin(&canvas))
@@ -729,7 +733,7 @@ void MainWindow::MakeToyIcon(const Toy &toy, const QSize &iconSize, QIcon &icon)
 
     if (toyIcon.isNull())
     {
-      QRect r(1, 1, iconSize.width() - 2, iconSize.height() - 2);
+      QRect r(1, 1, canvasSize.width() - 2, canvasSize.height() - 2);
       painter.setPen(Qt::NoPen);
       painter.setBrush(toy.GetColor());
       painter.drawRoundedRect(r, 4, 4);
@@ -740,6 +744,7 @@ void MainWindow::MakeToyIcon(const Toy &toy, const QSize &iconSize, QIcon &icon)
     painter.end();
   }
 
+  canvas.setDevicePixelRatio(dpr);
   icon = QIcon(QPixmap::fromImage(canvas));
 }
 
@@ -750,7 +755,10 @@ void MainWindow::PopulateToyTree()
   m_ToyTree->clear();
 
   const Toys::TOY_LIST &toys = m_Toys->GetList();
-  m_ToyTree->setHeaderLabel(tr("Widgets // %1").arg(toys.size()));
+  QString label = tr("Widgets");
+  if (toys.size() != 0)
+    label += QStringLiteral(" (%1)").arg(toys.size());
+  m_ToyTree->setHeaderLabel(label);
   m_ToyTree->setAlternatingRowColors(true);
 
   bool hasToys = false;
@@ -781,7 +789,8 @@ void MainWindow::PopulateToyTree()
       }
     }
 
-    str.append(QString(" // %1").arg(item->childCount()));
+    if (item->childCount() > 0)
+      str += QStringLiteral(" (%1)").arg(item->childCount());
     item->setText(0, str);
     m_ToyTree->addTopLevelItem(item);
   }
@@ -1000,7 +1009,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->ignore();
     return;
   }
-  
+
   if (m_Unsaved)
     setVisible(true);
 

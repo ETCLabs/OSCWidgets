@@ -148,7 +148,6 @@ void FadeEncoder::Tick(int tickCount)
 
 void FadeEncoder::resizeEvent(QResizeEvent *event)
 {
-  m_Canvas = QImage(size(), QImage::Format_ARGB32);
   UpdateMargins();
   FadeButton::resizeEvent(event);
 }
@@ -196,108 +195,87 @@ void FadeEncoder::mouseReleaseEvent(QMouseEvent *event)
 
 void FadeEncoder::paintEvent(QPaintEvent * /*event*/)
 {
-  m_Canvas.fill(0);
+  QPainter painter(this);
+  painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
-  QPainter painter;
-  if (painter.begin(&m_Canvas))
+  float brightness = m_Click;
+  if (m_Hover > 0)
+    brightness += (m_Hover * 0.2f);
+
+  QColor color(palette().color(QPalette::Button));
+  if (brightness > 0)
   {
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    qreal t = (brightness * BUTTON_BRIGHTESS);
+    color.setRedF(qMin(color.redF() + t, 1.0));
+    color.setGreenF(qMin(color.greenF() + t, 1.0));
+    color.setBlueF(qMin(color.blueF() + t, 1.0));
+  }
 
-    float brightness = m_Click;
-    if (m_Hover > 0)
-      brightness += (m_Hover * 0.2f);
+  QRect r = rect();
+  r.adjust(1 + HALF_BORDER, 1 + HALF_BORDER + m_TextMargin, -1 - HALF_BORDER, -1 - HALF_BORDER - m_LabelMargin);
 
-    QColor color(palette().color(QPalette::Button));
-    if (brightness > 0)
-    {
-      qreal t = (brightness * BUTTON_BRIGHTESS);
-      color.setRedF(qMin(color.redF() + t, 1.0));
-      color.setGreenF(qMin(color.greenF() + t, 1.0));
-      color.setBlueF(qMin(color.blueF() + t, 1.0));
-    }
+  if (r.width() > r.height())
+  {
+    r.translate(qRound((double)r.width() - r.height()) * 0.5, 0);
+    r.setWidth(r.height());
+  }
+  else if (r.height() > r.width())
+  {
+    r.translate(0, qRound((double)r.height() - r.width()) * 0.5);
+    r.setHeight(r.width());
+  }
 
-    QRect r(rect());
+  int n = qRound(r.width() * 0.333);
+  QRect r2(r.x() + qRound((r.width() - n) * 0.5), r.y() + qRound((r.height() - n) * 0.5), n, n);
 
-    r.adjust(1 + HALF_BORDER, 1 + HALF_BORDER + m_TextMargin, -1 - HALF_BORDER, -1 - HALF_BORDER - m_LabelMargin);
+  const QPixmap &pixmap = m_Images[m_ImageIndex].pixmap;
+  if (!pixmap.isNull())
+  {
+    QPainterPath clip;
+    clip.addEllipse(r);
+    painter.setClipPath(clip);
+    painter.drawPixmap(r.x() + qRound((r.width() - pixmap.width()) * 0.5), r.y() + qRound((r.height() - pixmap.height()) * 0.5), pixmap);
+    painter.setClipping(false);
+  }
 
-    if (r.width() > r.height())
-    {
-      r.translate(qRound((double)r.width() - r.height()) * 0.5, 0);
-      r.setWidth(r.height());
-    }
-    else if (r.height() > r.width())
-    {
-      r.translate(0, qRound((double)r.height() - r.width()) * 0.5);
-      r.setHeight(r.width());
-    }
+  if (m_Click > 0)
+  {
+    float degrees = (PosToRadians(m_MousePos) * (180 / M_PI));
+    painter.setOpacity(m_Click);
+    qreal angle = degrees + ENCODER_SPAN * 0.5;
+    QPainterPath path;
+    path.arcMoveTo(r, angle - ENCODER_SPAN);
+    QPointF p = path.currentPosition();
+    path.clear();
+    path.arcMoveTo(r2, angle);
+    path.arcTo(r2, angle, -ENCODER_SPAN);
+    path.lineTo(p);
+    path.arcTo(r, angle - ENCODER_SPAN, ENCODER_SPAN);
+    path.closeSubpath();
+    painter.fillPath(path, color);
+    painter.setOpacity(1.0);
+  }
 
-    int n = qRound(r.width() * 0.333);
-    QRect r2(r.x() + qRound((r.width() - n) * 0.5), r.y() + qRound((r.height() - n) * 0.5), n, n);
+  painter.setBrush(Qt::NoBrush);
+  painter.setPen(QPen(color, BORDER));
+  painter.drawEllipse(r);
+  painter.drawEllipse(r2);
 
-    bool donutHole = false;
+  if (!text().isEmpty())
+  {
+    int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
 
-    const QPixmap &pixmap = m_Images[m_ImageIndex].pixmap;
-    if (!pixmap.isNull())
-    {
-      QPainterPath clip;
-      clip.addEllipse(r);
-      painter.setClipPath(clip);
-      painter.drawPixmap(r.x() + qRound((r.width() - pixmap.width()) * 0.5), r.y() + qRound((r.height() - pixmap.height()) * 0.5), pixmap);
-      painter.setClipping(false);
-      donutHole = true;
-    }
+    painter.setPen(palette().color(QPalette::ButtonText));
+    painter.drawText(QRect(0, 0, width(), r.y() - hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, text());
 
-    if (m_Click > 0)
-    {
-      painter.setPen(Qt::NoPen);
-      painter.setBrush(color);
-      float radians = PosToRadians(m_MousePos);
-      float degrees = (radians * (180 / M_PI));
-      painter.setOpacity(m_Click);
-      painter.drawPie(r, qRound(degrees - ENCODER_SPAN * 0.5) * 16, ENCODER_SPAN * 16);
-      painter.setOpacity(1.0);
-      donutHole = true;
-    }
-
-    if (donutHole)
-    {
-      painter.setPen(Qt::NoPen);
-      painter.setBrush(Qt::white);
-      painter.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-      painter.drawEllipse(r2);
-      painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    }
-
-    painter.setBrush(Qt::NoBrush);
-    painter.setPen(QPen(color, BORDER));
-    painter.drawEllipse(r);
-    painter.drawEllipse(r2);
-
-    painter.end();
-
-    if (painter.begin(this))
-    {
-      painter.drawImage(0, 0, m_Canvas);
-
-      if (!text().isEmpty())
-      {
-        int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
-
-        painter.setPen(palette().color(QPalette::ButtonText));
-        painter.drawText(QRect(0, 0, width(), r.y() - hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, text());
-
-        if (!m_Label.isEmpty())
-          painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
-      }
-      else if (!m_Label.isEmpty())
-      {
-        int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
-        painter.setPen(palette().color(QPalette::ButtonText));
-        painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
-      }
-
-      painter.end();
-    }
+    if (!m_Label.isEmpty())
+      painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
+  }
+  else if (!m_Label.isEmpty())
+  {
+    int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
+    painter.setPen(palette().color(QPalette::ButtonText));
+    painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
   }
 }
 

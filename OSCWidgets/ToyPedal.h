@@ -97,7 +97,6 @@ protected:
   virtual void Tick(float value);
   virtual void SetState(EnumState state);
   virtual void paintEvent(QPaintEvent *event);
-  virtual void resizeEvent(QResizeEvent *event);
 };
 
 ////////////////////////////////////////////////////////////////////////////////

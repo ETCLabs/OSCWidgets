@@ -62,7 +62,6 @@ protected:
   bool m_MouseDown;
   int m_TextMargin;
   int m_LabelMargin;
-  QImage m_Canvas;
 
   virtual void UpdateMargins();
   virtual void AutoSizeFont();

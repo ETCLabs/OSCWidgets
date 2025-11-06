@@ -156,8 +156,6 @@ protected:
   FRAME_LIST m_Frames;
   bool m_ShowGrid;
   QRect m_GrabbedRect;
-  QColor m_GridBackgroundColor;
-  QImage m_GridBackgroundImage;
   bool m_MouseDown;
   QPoint m_MousePos;
   QRect m_MouseRect;
@@ -167,12 +165,9 @@ protected:
   virtual size_t GetFrameIndex(EditFrame *editFrame) const;
   virtual void ClipFrameToBounds(size_t index);
   virtual void UpdateMode();
-  virtual void UpdateGridBackground();
   virtual void SetGrabbedRect(const QRect &r);
   virtual void SetMouseRect(const QRect &r);
   virtual void HandleTranslateKey(QKeyEvent *event);
-  virtual bool event(QEvent *event);
-  virtual void resizeEvent(QResizeEvent *event);
   virtual void paintEvent(QPaintEvent *event);
   virtual void keyPressEvent(QKeyEvent *event);
   virtual void mousePressEvent(QMouseEvent *event);

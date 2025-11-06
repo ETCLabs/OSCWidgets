@@ -72,6 +72,8 @@ void FadeSlider::SetPercent(float percent)
 
 void FadeSlider::SetPercentPrivate(float percent, bool user)
 {
+  percent = qBound(0.0f, percent, 1.0f);
+
   if (m_Percent != percent)
   {
     m_Percent = percent;
@@ -155,7 +157,6 @@ void FadeSlider::UpdateMargins()
 
 void FadeSlider::resizeEvent(QResizeEvent *event)
 {
-  m_Canvas = QImage(size(), QImage::Format_ARGB32);
   UpdateMargins();
   FadeButton::resizeEvent(event);
 }
@@ -199,115 +200,114 @@ void FadeSlider::mouseReleaseEvent(QMouseEvent *event)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+void FadeSlider::wheelEvent(QWheelEvent *event)
+{
+  int degrees = event->angleDelta().y() / 8;
+  int steps = degrees / 15;
+  SetPercentPrivate((qRound(m_Percent * 100) + steps) * 0.01f, /*user*/ true);
+  event->accept();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void FadeSlider::paintEvent(QPaintEvent * /*event*/)
 {
-  m_Canvas.fill(0);
-
   QRectF r(rect());
   r.adjust(1 + HALF_BORDER, 1 + HALF_BORDER + m_TextMargin, -1 - HALF_BORDER, -1 - HALF_BORDER - m_LabelMargin);
 
-  QPainter painter;
-  if (painter.begin(&m_Canvas))
+  QPainter painter(this);
+
+  painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+
+  float brightness = m_Click;
+  if (m_Hover > 0)
+    brightness += (m_Hover * 0.2f);
+
+  QColor color(palette().color(QPalette::Button));
+  if (brightness > 0)
   {
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    qreal t = (brightness * BUTTON_BRIGHTESS);
+    color.setRedF(qMin(color.redF() + t, 1.0));
+    color.setGreenF(qMin(color.greenF() + t, 1.0));
+    color.setBlueF(qMin(color.blueF() + t, 1.0));
+  }
 
-    float brightness = m_Click;
-    if (m_Hover > 0)
-      brightness += (m_Hover * 0.2f);
+  QPainterPath clip;
+  clip.addRoundedRect(r, ROUNDED, ROUNDED);
+  painter.setClipPath(clip);
 
-    QColor color(palette().color(QPalette::Button));
-    if (brightness > 0)
-    {
-      qreal t = (brightness * BUTTON_BRIGHTESS);
-      color.setRedF(qMin(color.redF() + t, 1.0));
-      color.setGreenF(qMin(color.greenF() + t, 1.0));
-      color.setBlueF(qMin(color.blueF() + t, 1.0));
-    }
+  const QPixmap &pixmap = m_Images[m_ImageIndex].pixmap;
+  if (!pixmap.isNull())
+  {
+    painter.drawPixmap(r.x() + qRound((r.width() - pixmap.width()) * 0.5), r.y() + qRound((r.height() - pixmap.height()) * 0.5), pixmap);
+  }
 
-    QPainterPath clip;
-    clip.addRoundedRect(r, ROUNDED, ROUNDED);
-    painter.setClipPath(clip);
+  painter.setClipping(false);
 
-    const QPixmap &pixmap = m_Images[m_ImageIndex].pixmap;
-    if (!pixmap.isNull())
-    {
-      painter.drawPixmap(r.x() + qRound((r.width() - pixmap.width()) * 0.5), r.y() + qRound((r.height() - pixmap.height()) * 0.5), pixmap);
-    }
+  painter.setPen(QPen(color, BORDER, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin));
+  painter.setBrush(Qt::NoBrush);
+  painter.drawRoundedRect(r, ROUNDED, ROUNDED);
 
-    painter.setClipping(false);
+  painter.setClipping(true);
 
-    painter.setPen(QPen(color, BORDER, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin));
-    painter.setBrush(Qt::NoBrush);
-    painter.drawRoundedRect(r, ROUNDED, ROUNDED);
+  if (!pixmap.isNull())
+    painter.setOpacity(0.8);
 
-    painter.setClipping(true);
+  int y = PercentToPos(m_Percent);
 
-    if (!pixmap.isNull())
-      painter.setOpacity(0.8);
+  if (m_RecvPercent.pending)
+  {
+    int w = qRound(r.width() * 0.75);
+    painter.fillRect(QRect(r.x(), y, w, height() - y + 1), color);
 
-    int y = PercentToPos(m_Percent);
+    int y2 = PercentToPos(m_RecvPercent.percent);
+    int x = (r.x() + w);
+    painter.fillRect(QRect(x, y2, r.width() - x + 1, height() - y2 + 1), color.darker(125));
+  }
+  else
+    painter.fillRect(QRect(r.x(), y, r.width(), height() - y + 1), color);
 
-    if (m_RecvPercent.pending)
-    {
-      int w = qRound(r.width() * 0.75);
-      painter.fillRect(QRect(r.x(), y, w, height() - y + 1), color);
+  painter.setOpacity(1.0);
 
-      int y2 = PercentToPos(m_RecvPercent.percent);
-      int x = (r.x() + w);
-      painter.fillRect(QRect(x, y2, r.width() - x + 1, height() - y2 + 1), color.darker(125));
-    }
-    else
-      painter.fillRect(QRect(r.x(), y, r.width(), height() - y + 1), color);
+  int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
+  if (m_Hover > 0)
+  {
+    y -= hoverRaise;
+    painter.setOpacity(m_Hover);
 
+    QFont fnt(font());
+    fnt.setPixelSize(qRound(width() * 0.4));
+    painter.setFont(fnt);
+
+    QString num = QString::number(qRound(m_Percent * 100));
+
+    QRectF textRect(r.x(), y - r.height(), r.width(), r.height());
+    painter.drawText(textRect, Qt::AlignHCenter | Qt::AlignBottom, num);
+
+    textRect = QRectF(r.x(), y, r.width(), r.height() - fontMetrics().height() * 1.5);
+    painter.setPen(Qt::white);
+    painter.setCompositionMode(QPainter::CompositionMode_DestinationOut);
+    painter.drawText(textRect, Qt::AlignHCenter | Qt::AlignBottom, num);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
     painter.setOpacity(1.0);
+  }
 
-    int hoverRaise = qRound(m_Hover * BUTTON_RAISE);
-    if (m_Hover > 0)
-    {
-      y -= hoverRaise;
-      painter.setOpacity(m_Hover);
+  painter.setClipping(false);
 
-      QFont fnt(font());
-      fnt.setPixelSize(qRound(width() * 0.4));
-      painter.setFont(fnt);
+  if (!text().isEmpty())
+  {
+    painter.setFont(font());
+    painter.setPen(palette().color(QPalette::ButtonText));
+    painter.drawText(QRect(0, 0, width(), r.y() - hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, text());
 
-      QString num = QString::number(qRound(m_Percent * 100));
-
-      QRectF textRect(r.x(), y - r.height(), r.width(), r.height());
-      painter.drawText(textRect, Qt::AlignHCenter | Qt::AlignBottom, num);
-
-      textRect = QRectF(r.x(), y, r.width(), r.height());
-      painter.setPen(Qt::white);
-      painter.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-      painter.drawText(textRect, Qt::AlignHCenter | Qt::AlignBottom, num);
-      painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-      painter.setOpacity(1.0);
-    }
-
-    painter.end();
-
-    if (painter.begin(this))
-    {
-      painter.drawImage(0, 0, m_Canvas);
-
-      if (!text().isEmpty())
-      {
-        painter.setFont(font());
-        painter.setPen(palette().color(QPalette::ButtonText));
-        painter.drawText(QRect(0, 0, width(), r.y() - hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, text());
-
-        if (!m_Label.isEmpty())
-          painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
-      }
-      else if (!m_Label.isEmpty())
-      {
-        painter.setFont(font());
-        painter.setPen(palette().color(QPalette::ButtonText));
-        painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
-      }
-
-      painter.end();
-    }
+    if (!m_Label.isEmpty())
+      painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
+  }
+  else if (!m_Label.isEmpty())
+  {
+    painter.setFont(font());
+    painter.setPen(palette().color(QPalette::ButtonText));
+    painter.drawText(QRect(0, r.bottom(), width(), height() - r.bottom() + hoverRaise), Qt::AlignCenter | Qt::TextWordWrap | Qt::TextDontClip, m_Label);
   }
 }
 
