@@ -27,7 +27,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define APP_VERSION "1.0.2"
+#define APP_VERSION "1.0.3"
 
 #define MIN_OPACITY 10
 
@@ -1087,7 +1087,7 @@ void MainWindow::onMenuFramesEnabled(bool b)
 ////////////////////////////////////////////////////////////////////////////////
 
 void MainWindow::onMenuAlwaysOnTop(bool b)
-{  
+{
   bool wasVisible = isVisible();
   m_Toys->SetTopMost(b);
   setWindowFlag(Qt::WindowStaysOnTopHint, b);
